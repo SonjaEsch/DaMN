@@ -1,0 +1,6 @@
+{
+	"vev": 1.23,
+	"lambda_higgs": 1.00,
+	"mass": 2.00,
+	"tree_level_mass": {type: "constant", 1234}
+}
