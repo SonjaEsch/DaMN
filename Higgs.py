@@ -12,4 +12,5 @@ class HiggsCreator(Particle.ParticleCreator):
 
 if __name__ == "__main__":
     higgs_creator = HiggsCreator("higgs.json")
-    print(higgs_creator.create())
+    for i in range(100000):
+        higgs = higgs_creator.create()

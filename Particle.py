@@ -36,7 +36,10 @@ class ParticleCreator:
                     try:
                         self.__dict__[key] = float(config[key])
                     except TypeError:
-                        self.__dict__[key] = parse_dictionary_to_distribution(config[key])
+                        try:
+                            self.__dict__[key] = parse_dictionary_to_distribution(config[key])
+                        except:
+                            print("An error occurred while parsing {} parameter {}".format(filename, key))
 
     def create(self):
         particle = self.particle_class()
