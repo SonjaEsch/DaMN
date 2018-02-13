@@ -1,8 +1,10 @@
 import json
 
+from Distribution import parse_dictionary_to_distribution
+
 
 class Particle:
-    parameters=[]
+    parameters = []
 
     def __init__(self):
         for key in self.parameters:
@@ -29,13 +31,12 @@ class ParticleCreator:
     def parse_config(self, filename):
         with open(filename) as file:
             config = json.load(file)
-            print(config)
             for key in self.particle_class.parameters:
                 if key in config:
                     try:
                         self.__dict__[key] = float(config[key])
                     except TypeError:
-                        pass
+                        self.__dict__[key] = parse_dictionary_to_distribution(config[key])
 
     def create(self):
         particle = self.particle_class()
@@ -46,4 +47,3 @@ class ParticleCreator:
                 except TypeError:
                     particle.__dict__[key] = self.__dict__[key]
         return particle
-
