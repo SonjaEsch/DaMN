@@ -14,3 +14,4 @@ if __name__ == "__main__":
     higgs_creator = HiggsCreator("higgs.json")
     for i in range(100000):
         higgs = higgs_creator.create()
+        print(higgs.to_json())

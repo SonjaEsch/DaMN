@@ -17,6 +17,9 @@ class Particle:
 
         return string
 
+    def to_json(self):
+        return json.dumps(self.__dict__)
+
 
 class ParticleCreator:
     def __init__(self, particle_class, filename=None):
