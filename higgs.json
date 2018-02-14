@@ -1,9 +1,4 @@
 {
-	"vev": {"type": "uniform", "min_value": 0.0, "max_value": 1.0},
-	"lambda_higgs": {"type": "uniform_exponential", "factor": 1, "base": 10, "min_exponent": 0.0, "max_exponent": 1.0},
-	"mass": {"type": "normal", "sigma": 1.0, "mu": 1.0},
-	"tree_level_mass": {"type": "merged",
-						"distribution1": {"type": "constant", "value": 1.0},
-						"distribution2": {"type": "constant", "value": -1.0}
-					   }
+	"vev": 246,
+	"lambda_higgs": {"type": "uniform_exponential", "factor": 1, "base": 10, "min_exponent": -10, "max_exponent": 0}
 }

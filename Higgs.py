@@ -2,7 +2,7 @@ import Particle
 
 
 class Higgs(Particle.Particle):
-    parameters = ["vev", "lambda_higgs", "mass", "tree_level_mass"]
+    parameters = ["vev", "lambda_higgs"]
 
 
 class HiggsCreator(Particle.ParticleCreator):
