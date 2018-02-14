@@ -1,0 +1,8 @@
+{
+  "g11": {"type": "uniform", "min_value": -1, "max_value": 1},
+  "g12": {"type": "uniform", "min_value": -1, "max_value": 1},
+  "g13": {"type": "uniform", "min_value": -1, "max_value": 1},
+  "g21": {"type": "uniform", "min_value": -1, "max_value": 1},
+  "g22": {"type": "uniform", "min_value": -1, "max_value": 1},
+  "g23": {"type": "uniform", "min_value": -1, "max_value": 1}
+}
