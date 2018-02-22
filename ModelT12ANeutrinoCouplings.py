@@ -18,6 +18,14 @@ class DependentVariables:
         mass_eigenstates = []
         mixing_matrix = []
 
+    def __str__(self):  # TODO the print routine does not print DependentVariable objects nicely, the matrices do not look good
+
+        string = "{}\n".format(self.__class__.__name__)
+        for key in self.__dict__:
+            string += "\t{}: {}\n".format(key, self.__dict__[key])
+
+        return string
+
 
 def diagnolaization(matrix):
     eigenvalues, eigenvectors = np.linalg.eig(np.array(matrix))
@@ -38,7 +46,7 @@ class ModelT12A(Model.Model):
         self.fermion_dependent = DependentVariables()
         self.neutrino_dependent = DependentVariables()
 
-    def calculate_dependent_variables(self):
+    def calculate_dependent_variables(self):  #  TODO one should only be able to use this function from outside, the other should not be avilable
         self.calculate_higgs_mass()
         self.calculate_scalar_masses_and_mixings()
         self.calculate_fermion_masses_and_mixings()
@@ -139,7 +147,7 @@ if __name__ == "__main__":
 
     model.calculate_dependent_variables()
 
-    pretty = pprint.PrettyPrinter(indent = 4)
+    pretty = pprint.PrettyPrinter(indent=4)
     print("higgs mass")
     pretty.pprint(model.higgs_dependent.mass_eigenstates)
     print("\n")

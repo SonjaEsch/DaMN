@@ -2,17 +2,15 @@ import json
 
 
 class Model:
-    # particles = []  # TODO?? do we need this here?
-    # mass_matrices = []
-    # dependent_variables = []
-
     def __init__(self):
-        # for particle in particles:
-        #     self.particle = particle
         pass
 
     def __str__(self):
-        pass
+        string = "{}\n".format(self.__class__.__name__)
+        for key in self.__dict__:
+            string += "\t{}: {}\n".format(key, self.__dict__[key])
+
+        return string
 
     def calculate_dependent_variables(self):
         pass
