@@ -3,20 +3,15 @@ import Particle
 import Higgs
 import Scalar
 import Fermion
-import NeutrinoCouplings
+import NeutrinoMasses
 import numpy as np
 import pprint
 
 
-# TODO write a routine to save/restore model points easily
-# TODO in other scenarios the neutrino couplings are not input parameter but the mass eigenstates and mixing matrix are
-# TODO if one would like to write all couplings to micromegas or spheno input how can one have everything accessible in the same way?
-# is it a good idea to add the couplings to the neutrino element in model afterwards ??
+# TODO all questions for ModelT12ANeutrinoCouplings apply here as well
+# TODO catch all exceptions otherwise one could mess up a whole scan afterwards
 
-# TODO only the routine for neutrinos is different, should one still leave this as one model construction?
-# shall the other functions be separated?
 
-# TODO should this be in an extra file?
 class DependentVariables:
 
     def __init__(self):
@@ -25,8 +20,6 @@ class DependentVariables:
         mixing_matrix = []
 
     def __str__(self):
-        # TODO the print routine does not print DependentVariable objects nicely, the matrices do not look good
-
         string = "{}\n".format(self.__class__.__name__)
         for key in self.__dict__:
             string += "\t{}: {}\n".format(key, self.__dict__[key])
@@ -54,11 +47,10 @@ class ModelT12A(Model.Model):
         self.neutrino_dependent = DependentVariables()
 
     def calculate_dependent_variables(self):
-        # TODO one should only be able to use this function from outside, the other should not be avilable
         self.calculate_higgs_mass()
         self.calculate_scalar_masses_and_mixings()
         self.calculate_fermion_masses_and_mixings()
-        self.calculate_neutrino_masses_and_mixings()
+        self.calculate_neutrino_masses_mixings_and_couplings()
 
     def calculate_higgs_mass(self):
         self.higgs_dependent.mass_matrix = [np.sqrt(self.higgs.lambda_higgs * self.higgs.vev ** 2)]
@@ -93,15 +85,30 @@ class ModelT12A(Model.Model):
         self.fermion_dependent.mass_eigenstates, self.fermion_dependent.mixing_matrix = diagonalization(
             self.fermion_dependent.mass_matrix)
 
-    def calculate_neutrino_masses_and_mixings(self):
-        couplings1 = [self.neutrino.g11, self.neutrino.g12, self.neutrino.g13]
-        couplings2 = [self.neutrino.g21, self.neutrino.g22, self.neutrino.g23]
+    def calculate_neutrino_masses_mixings_and_couplings(self):
 
-        self.neutrino_dependent.mass_matrix = []
+        m1 = 0
+        m2 = np.sqrt(self.neutrino.delta_m12_squared_e5 * 10 ** (-5))
+        m3 = np.sqrt(
+            self.neutrino.delta_m23_squared_e4 * 10 ** (-4) + 0.5 * self.neutrino.delta_m12_squared_e5 * 10 ** (-5))
 
-        c11 = 0.0
-        c12 = 0.0
-        c22 = 0.0
+        self.neutrino_dependent.mass_eigenstates = [m1, m2, m3]
+
+        s12 = np.sqrt(self.neutrino.sin_theta12_squared)
+        s13 = np.sqrt(self.neutrino.sin_theta13_squared)
+        s23 = np.sqrt(self.neutrino.sin_theta23_squared)
+
+        c12 = np.sqrt(1 - s12 ** 2)
+        c13 = np.sqrt(1 - s13 ** 2)
+        c23 = np.sqrt(1 - s23 ** 2)
+
+        self.neutrino_dependent.mixing_matrix = [[c12 * c13, -s12 * c23 - c12 * s23 * s13, s12 * s23 - c12 * c23 * s13],
+                                                 [s12 * c13, c12 * c23 - s12 * s23 * s13, -c12 * s23 - s12 * c23 * s13],
+                                                 [s13, s23 * c13, c23 * c13]]
+
+        co11 = 0.0
+        co12 = 0.0
+        co22 = 0.0
 
         for j in range(3):
             for m in range(3):
@@ -111,30 +118,49 @@ class ModelT12A(Model.Model):
                 mixing_fermion = self.fermion_dependent.mixing_matrix
                 mixing_scalar = self.scalar_dependent.mixing_matrix
 
-                # TODO important! notice the scalar mass matrix is quadratic and write it somewhere so people will know
                 ljm = 1 / (16 * np.pi ** 2) * mass_fermion / (mass_scalar ** 2 - mass_fermion ** 2) * (
                         mass_fermion ** 2 * np.log(float(mass_fermion ** 2)) - mass_scalar ** 2 * np.log(
                     float(mass_scalar ** 2)))
 
-                c11 += mixing_fermion[2][j] ** 2 * mixing_scalar[0][m] ** 2 * ljm
-                c12 += mixing_fermion[0][j] * mixing_fermion[2][j] * mixing_scalar[0][m] * mixing_scalar[1][m] * ljm
-                c22 += mixing_fermion[0][j] ** 2 * (mixing_scalar[1][m] ** 2 - mixing_scalar[2][m] ** 2) * ljm
+                co11 += mixing_fermion[2][j] ** 2 * mixing_scalar[0][m] ** 2 * ljm
+                co12 += mixing_fermion[0][j] * mixing_fermion[2][j] * mixing_scalar[0][m] * mixing_scalar[1][m] * ljm
+                co22 += mixing_fermion[0][j] ** 2 * (mixing_scalar[1][m] ** 2 - mixing_scalar[2][m] ** 2) * ljm
 
-        for i in range(3):
-            row = []
-            for k in range(3):
-                row.append(-c11 * couplings1[i] * couplings1[k]
-                           + c12 * couplings1[i] * couplings2[k]
-                           + c12 * couplings1[k] * couplings2[i]
-                           - c22 * couplings2[i] * couplings2[k])
+        matrix_a = [[-co11, co12], [co12, -co22]]
+        # TODO are the signs reasonable?
 
-            self.neutrino_dependent.mass_matrix.append(row)
+        eigenvalues, eigenvectors = diagonalization(matrix_a)
+        # TODO raise exception if one or more eigenvalues are zero! this parameter point does not converge
+        # TODO it is necessary to use a new one
+        # TODO how to stop and not proceed in this case?
+        # TODO question: how many points are excluded because of this?
+        # TODO think about better text for exception
 
-        self.neutrino_dependent.mass_eigenstates, self.neutrino_dependent.mixing_matrix = diagonalization(
-            self.neutrino_dependent.mass_matrix)
+        temp = []
 
-        # TODO one of the neutrino mass eigenvalues is actually zero! Due to numerical uncertainties it is around 1e-20
-        # should it just be fixed to 0 automatically?
+        for entry in eigenvalues:
+            try:
+                val = 1/np.sqrt(entry)
+                temp.append(val)
+
+            except ValueError:
+                print("Cannot calculate neutrino couplings. Encountered negative value in sqrt")
+
+
+        diag_a_sqrt_inverse = np.diag(temp)
+        diag_nu_sqrt = np.diag([np.sqrt(m1), np.sqrt(m2), np.sqrt(m3)])
+        u_a = np.array(eigenvectors)
+        u_nu = np.array(self.neutrino_dependent.mixing_matrix)
+
+        cr = self.neutrino.cos_casas_ibarra_angle
+        sr = np.sqrt(1 - cr ** 2)
+        r = np.array([[0, cr, -sr], [0, sr, cr]])
+
+        neutrino_couplings = np.dot(np.dot(np.dot(u_a, diag_a_sqrt_inverse), np.dot(r, diag_nu_sqrt)), u_nu.transpose())
+
+        # TODO where to put the neutrino couplings?
+        self.neutrino_dependent.couplings = neutrino_couplings
+
 
 
 if __name__ == "__main__":
@@ -147,44 +173,14 @@ if __name__ == "__main__":
     fermion_creator = Particle.ParticleCreator(Fermion.Fermion, "fermion.json")
     fermionDummy = fermion_creator.create()
 
-    neutrino_creator = Particle.ParticleCreator(NeutrinoCouplings.Neutrino, "neutrino_couplings.json")
+    neutrino_creator = Particle.ParticleCreator(NeutrinoMasses.Neutrino, "neutrino_masses.json")
     neutrinoDummy = neutrino_creator.create()
 
     model = ModelT12A(higgsDummy, fermionDummy, scalarDummy, neutrinoDummy)
 
-    # depVar = DependentVariables()
-    # print(depVar.mixing_matrix) #FIXME mixing matrix does not exist even though it is defined in __init__
-    #
-    # print("compare")
-    # print(higgsDummy.vev)
-    # print("=?")
-    # print(model.higgs.vev)
-
-    # print(model.scalar_dependent.mixing_matrix) # TODO does not exist yet...just after calculating everything
-
     model.calculate_dependent_variables()
 
     pretty = pprint.PrettyPrinter(indent=4)
-    print("higgs mass")
-    pretty.pprint(model.higgs_dependent.mass_eigenstates)
-    print("\n")
-
-    print("Scalar mixing matrix")
-    pretty.pprint(model.scalar_dependent.mixing_matrix)
-    print("\n")
-
-    print("scalar masses")
-    pretty.pprint(model.scalar_dependent.mass_eigenstates)
-    print("\n")
-
-    print("Fermion mixing matrix")
-    pretty.pprint(model.fermion_dependent.mixing_matrix)
-    print("\n")
-
-    print("fermion masses")
-    pretty.pprint(model.fermion_dependent.mass_eigenstates)
-    print("\n")
-
     print("neutrino mixing matrix")
     pretty.pprint(model.neutrino_dependent.mixing_matrix)
     print("\n")
@@ -192,3 +188,8 @@ if __name__ == "__main__":
     print("neutrino masses")
     pretty.pprint(model.neutrino_dependent.mass_eigenstates)
     print("\n")
+
+    print("neutrino couplings")
+    pretty.pprint(model.neutrino_dependent.couplings)
+
+
