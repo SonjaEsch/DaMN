@@ -9,6 +9,9 @@ import pprint
 
 
 # TODO write a routine to save/restore model points easily
+# TODO in other scenarios the neutrino couplings are not input parameter but the mass eigenstates and mixing matrix are
+# TODO if one would like to write all couplings to micromegas or spheno input how can one have everything accessible in the same way?
+# is it a good idea to add the couplings to the neutrino element in model afterwards ??
 
 # TODO should this be in an extra file?
 class DependentVariables:
@@ -59,13 +62,17 @@ class ModelT12A(Model.Model):
 
     def calculate_scalar_masses_and_mixings(self):
         self.scalar_dependent.mass_matrix = [
-            [self.scalar.mass_singlet ** 2 + 0.5 * self.higgs.vev ** 2 * self.scalar.lambda_S,
-             self.scalar.A * self.higgs.vev, 0],
-            [self.scalar.A * self.higgs.vev,
-             self.scalar.mass_doublet ** 2 + 0.5 * self.higgs.vev ** 2 * (
-                     self.scalar.lambda_D + self.scalar.lambda_P + self.scalar.lambda_PP), 0],
-            [0, 0, self.scalar.mass_doublet ** 2 + 0.5 * self.higgs.vev ** 2 * (
-                    self.scalar.lambda_D + self.scalar.lambda_P - self.scalar.lambda_PP)]]
+            [self.scalar.mass_singlet ** 2 + 1/4.0 * self.higgs.vev ** 2 * self.scalar.lambda_S,
+             self.scalar.A * self.higgs.vev/np.sqrt(2.0),
+             0],
+            [self.scalar.A * self.higgs.vev/np.sqrt(2.0),
+             self.scalar.mass_doublet ** 2 + 1/4.0 * self.higgs.vev ** 2 * (
+                     self.scalar.lambda_D + self.scalar.lambda_P + 2*self.scalar.lambda_PP),
+             0],
+            [0,
+             0,
+             self.scalar.mass_doublet ** 2 + 1/4.0 * self.higgs.vev ** 2 * (
+                    self.scalar.lambda_D + self.scalar.lambda_P - 2*self.scalar.lambda_PP)]]
 
         self.scalar_dependent.mass_eigenstates, self.scalar_dependent.mixing_matrix = diagnolaization(
             self.scalar_dependent.mass_matrix)
@@ -77,7 +84,7 @@ class ModelT12A(Model.Model):
 
         self.fermion_dependent.mass_matrix = [[self.fermion.mass_singlet, temp1, temp2],
                                               [temp1, 0, self.fermion.mass_doublet],
-                                              [temp2, self.fermion.mass_doublet, temp2]]
+                                              [temp2, self.fermion.mass_doublet, 0]]
         self.fermion_dependent.mass_eigenstates, self.fermion_dependent.mixing_matrix = diagnolaization(
             self.fermion_dependent.mass_matrix)
 
