@@ -40,6 +40,10 @@ print("higgs mass")
 pretty.pprint(model.higgs_dependent.mass_eigenstates)
 print("\n")
 
+print("Scalar mass matrix")
+pretty.pprint(model.scalar_dependent.mass_matrix)
+print("\n")
+
 print("Scalar mixing matrix")
 pretty.pprint(model.scalar_dependent.mixing_matrix)
 print("\n")
@@ -48,12 +52,21 @@ print("scalar masses")
 pretty.pprint(model.scalar_dependent.mass_eigenstates)
 print("\n")
 
+print("Fermion mass matrix")
+pretty.pprint(model.fermion_dependent.mass_matrix)
+print("\n")
+
 print("Fermion mixing matrix")
 pretty.pprint(model.fermion_dependent.mixing_matrix)
 print("\n")
 
 print("fermion masses")
 pretty.pprint(model.fermion_dependent.mass_eigenstates)
+print("\n")
+
+
+print("Neutrino mass matrix")
+pretty.pprint(model.neutrino_dependent.mass_matrix)
 print("\n")
 
 print("neutrino mixing matrix")

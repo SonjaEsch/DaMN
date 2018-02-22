@@ -21,7 +21,8 @@ class DependentVariables:
         mass_eigenstates = []
         mixing_matrix = []
 
-    def __str__(self):  # TODO the print routine does not print DependentVariable objects nicely, the matrices do not look good
+    def __str__(
+            self):  # TODO the print routine does not print DependentVariable objects nicely, the matrices do not look good
 
         string = "{}\n".format(self.__class__.__name__)
         for key in self.__dict__:
@@ -49,7 +50,8 @@ class ModelT12A(Model.Model):
         self.fermion_dependent = DependentVariables()
         self.neutrino_dependent = DependentVariables()
 
-    def calculate_dependent_variables(self):  #  TODO one should only be able to use this function from outside, the other should not be avilable
+    def calculate_dependent_variables(
+            self):  # TODO one should only be able to use this function from outside, the other should not be avilable
         self.calculate_higgs_mass()
         self.calculate_scalar_masses_and_mixings()
         self.calculate_fermion_masses_and_mixings()
@@ -62,17 +64,17 @@ class ModelT12A(Model.Model):
 
     def calculate_scalar_masses_and_mixings(self):
         self.scalar_dependent.mass_matrix = [
-            [self.scalar.mass_singlet ** 2 + 1/4.0 * self.higgs.vev ** 2 * self.scalar.lambda_S,
-             self.scalar.A * self.higgs.vev/np.sqrt(2.0),
+            [self.scalar.mass_singlet ** 2 + 1 / 4.0 * self.higgs.vev ** 2 * self.scalar.lambda_S,
+             self.scalar.A * self.higgs.vev / np.sqrt(2.0),
              0],
-            [self.scalar.A * self.higgs.vev/np.sqrt(2.0),
-             self.scalar.mass_doublet ** 2 + 1/4.0 * self.higgs.vev ** 2 * (
-                     self.scalar.lambda_D + self.scalar.lambda_P + 2*self.scalar.lambda_PP),
+            [self.scalar.A * self.higgs.vev / np.sqrt(2.0),
+             self.scalar.mass_doublet ** 2 + 1 / 4.0 * self.higgs.vev ** 2 * (
+                     self.scalar.lambda_D + self.scalar.lambda_P + 2 * self.scalar.lambda_PP),
              0],
             [0,
              0,
-             self.scalar.mass_doublet ** 2 + 1/4.0 * self.higgs.vev ** 2 * (
-                    self.scalar.lambda_D + self.scalar.lambda_P - 2*self.scalar.lambda_PP)]]
+             self.scalar.mass_doublet ** 2 + 1 / 4.0 * self.higgs.vev ** 2 * (
+                     self.scalar.lambda_D + self.scalar.lambda_P - 2 * self.scalar.lambda_PP)]]
 
         self.scalar_dependent.mass_eigenstates, self.scalar_dependent.mixing_matrix = diagnolaization(
             self.scalar_dependent.mass_matrix)
@@ -101,30 +103,35 @@ class ModelT12A(Model.Model):
         for j in range(3):
             for m in range(3):
                 mass_fermion = self.fermion_dependent.mass_eigenstates[j]
-                mass_scalar = self.scalar_dependent.mass_eigenstates[m]
+                mass_scalar = np.sqrt(self.scalar_dependent.mass_eigenstates[m])
+
                 mixing_fermion = self.fermion_dependent.mixing_matrix
                 mixing_scalar = self.scalar_dependent.mixing_matrix
 
+                # TODO important! notice the scalar mass matrix is quadratic and write it somewhere so people will know
                 ljm = 1 / (16 * np.pi ** 2) * mass_fermion / (mass_scalar ** 2 - mass_fermion ** 2) * (
-                        mass_fermion ** 2 * np.log(float(mass_fermion ** 2)) + mass_scalar ** 2 * np.log(
+                        mass_fermion ** 2 * np.log(float(mass_fermion ** 2)) - mass_scalar ** 2 * np.log(
                     float(mass_scalar ** 2)))
 
                 c11 += mixing_fermion[2][j] ** 2 * mixing_scalar[0][m] ** 2 * ljm
                 c12 += mixing_fermion[0][j] * mixing_fermion[2][j] * mixing_scalar[0][m] * mixing_scalar[1][m] * ljm
-                c22 += mixing_fermion[0][j] ** 2 * mixing_scalar[2][m] ** 2 * ljm
+                c22 += mixing_fermion[0][j] ** 2 * (mixing_scalar[1][m] ** 2 - mixing_scalar[2][m] ** 2) * ljm
 
         for i in range(3):
             row = []
             for k in range(3):
-                row.append(c11 * couplings1[i] * couplings1[k]
+                row.append(-c11 * couplings1[i] * couplings1[k]
                            + c12 * couplings1[i] * couplings2[k]
                            + c12 * couplings1[k] * couplings2[i]
-                           + c22 * couplings2[i] * couplings2[k])
+                           - c22 * couplings2[i] * couplings2[k])
 
             self.neutrino_dependent.mass_matrix.append(row)
 
         self.neutrino_dependent.mass_eigenstates, self.neutrino_dependent.mixing_matrix = diagnolaization(
             self.neutrino_dependent.mass_matrix)
+
+        # TODO one of the neutrino mass eigenvalues is actually zero! Due to numerical uncertainties it is around 1e-20
+        # should it just be fixed to 0 automatically?
 
 
 if __name__ == "__main__":
