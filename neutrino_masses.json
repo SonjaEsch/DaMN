@@ -1,0 +1,8 @@
+{
+  "sin_theta12_squared":    {"type": "normal", "sigma": 0.013, "mu": 0.304},
+  "sin_theta_13_squared":   {"type": "normal", "sigma": 0.0010, "mu": 0.0218},
+  "sin_theta_23_squared":   {"type": "normal", "sigma": 0.052, "mu": 0.452},
+  "delta_m12_squared":      {"type": "normal", "sigma": 0.19,  "mu": 7.50},
+  "delta_m23_squared":      {"type": "normal", "sigma": 0.047, "mu": 2.457},
+  "cos_casas_ibarra_angle": {"type": "uniform", "min_value": -1, "max_value": 1}
+}
