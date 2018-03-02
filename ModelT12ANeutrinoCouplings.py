@@ -24,7 +24,6 @@ class ModelT12A(Model.Model):
         self.neutrino_dependent = DependentVariables()
 
     def calculate_dependent_variables(self):
-        # TODO one should only be able to use this function from outside, the other should not be avilable
         self.calculate_higgs_mass()
         self.calculate_scalar_masses_and_mixings()
         self.calculate_fermion_masses_and_mixings()
@@ -97,8 +96,8 @@ class ModelT12A(Model.Model):
 
                 # TODO important! notice the scalar mass matrix is quadratic and write it somewhere so people will know
                 mass_combination_jm = 1 / (16 * np.pi ** 2) * mass_fermion / (mass_scalar ** 2 - mass_fermion ** 2) * (
-                        mass_fermion ** 2 * math.log(float(mass_fermion ** 2)) - mass_scalar ** 2 * math.log(
-                    (mass_scalar ** 2)))
+                        mass_fermion ** 2 * math.log(float(mass_fermion ** 2)) - mass_scalar ** 2
+                        * math.log((mass_scalar ** 2)))
 
                 co11 += mixing_fermion[2][j] ** 2 * mixing_scalar[0][m] ** 2 * mass_combination_jm
                 co12 += mixing_fermion[0][j] * mixing_fermion[2][j] * mixing_scalar[0][m] * mixing_scalar[1][
@@ -122,16 +121,6 @@ if __name__ == "__main__":
     neutrinoDummy = neutrino_creator.create()
 
     model = ModelT12A(higgsDummy, fermionDummy, scalarDummy, neutrinoDummy)
-
-    # depVar = DependentVariables()
-    # print(depVar.mixing_matrix) #FIXME mixing matrix does not exist even though it is defined in __init__
-    #
-    # print("compare")
-    # print(higgsDummy.vev)
-    # print("=?")
-    # print(model.higgs.vev)
-
-    # print(model.scalar_dependent.mixing_matrix) # TODO does not exist yet...just after calculating everything
 
     model.calculate_dependent_variables()
 
