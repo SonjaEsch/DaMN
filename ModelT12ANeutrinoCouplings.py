@@ -24,17 +24,17 @@ class ModelT12A(Model.Model):
         self.neutrino_dependent = DependentVariables()
 
     def calculate_dependent_variables(self):
-        self.calculate_higgs_mass()
-        self.calculate_scalar_masses_and_mixings()
-        self.calculate_fermion_masses_and_mixings()
-        self.calculate_neutrino_masses_and_mixings()
+        self.calculate_higgs_dependent()
+        self.calculate_scalar_dependent()
+        self.calculate_fermion_dependent()
+        self.calculate_neutrino_dependent()
 
-    def calculate_higgs_mass(self):
+    def calculate_higgs_dependent(self):
         self.higgs_dependent.mass_matrix = [math.sqrt(self.higgs.lambda_higgs * self.higgs.vev ** 2)]
         self.higgs_dependent.mass_eigenstates = self.higgs_dependent.mass_matrix
         self.higgs_dependent.mixing_matrix = [1]
 
-    def calculate_scalar_masses_and_mixings(self):
+    def calculate_scalar_dependent(self):
         mixing_term = self.scalar.A * self.higgs.vev / math.sqrt(2.0)
         couplings_factor = 1 / 4.0 * self.higgs.vev ** 2
         doublet_couplings_plus = couplings_factor*(self.scalar.lambda_D + self.scalar.lambda_P + 2*self.scalar.lambda_PP)
@@ -48,9 +48,9 @@ class ModelT12A(Model.Model):
         self.scalar_dependent.calculate_eigenstates_mixing_matrix_from_mass_matrix()
 
         if min(self.scalar_dependent.mass_eigenstates) < 0:
-            raise ValueError("calculate_scalar_masses_and_mixings: Found negative value in mass_eigenstates")
+            raise ValueError("calculate_scalar_dependent: Found negative value in mass_eigenstates")
 
-    def calculate_fermion_masses_and_mixings(self):
+    def calculate_fermion_dependent(self):
 
         y1_term = self.fermion.y1 * self.higgs.vev / math.sqrt(2.0)
         y2_term = self.fermion.y2 * self.higgs.vev / math.sqrt(2.0)
@@ -61,7 +61,7 @@ class ModelT12A(Model.Model):
 
         self.fermion_dependent.calculate_eigenstates_mixing_matrix_from_mass_matrix()
 
-    def calculate_neutrino_masses_and_mixings(self):
+    def calculate_neutrino_dependent(self):
 
         co11, co12, co22 = self.get_neutrino_coefficients()
 

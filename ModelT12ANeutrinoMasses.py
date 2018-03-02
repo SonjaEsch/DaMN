@@ -9,7 +9,6 @@ import math
 from DependentVariables import DependentVariables
 
 
-# TODO all questions for ModelT12ANeutrinoCouplings apply here as well
 # TODO catch all exceptions otherwise one could mess up a whole scan afterwards
 
 class ModelT12A(Model.Model):
@@ -25,6 +24,12 @@ class ModelT12A(Model.Model):
         self.scalar_dependent = DependentVariables()
         self.fermion_dependent = DependentVariables()
         self.neutrino_dependent = DependentVariables()
+
+    def calculate_dependent_variables(self):
+        self.calculate_higgs_mass()
+        self.calculate_scalar_masses_and_mixings()
+        self.calculate_fermion_masses_and_mixings()
+        self.calculate_neutrino_masses_mixings_and_couplings()
 
     def calculate_higgs_mass(self):
         self.higgs_dependent.mass_matrix = [math.sqrt(self.higgs.lambda_higgs * self.higgs.vev ** 2)]
@@ -140,11 +145,7 @@ class ModelT12A(Model.Model):
         self.neutrino.g22 = neutrino_couplings[1][1]
         self.neutrino.g23 = neutrino_couplings[1][2]
 
-    def calculate_dependent_variables(self):
-        self.calculate_higgs_mass()
-        self.calculate_scalar_masses_and_mixings()
-        self.calculate_fermion_masses_and_mixings()
-        self.calculate_neutrino_masses_mixings_and_couplings()
+
 
 
 if __name__ == "__main__":
@@ -165,7 +166,7 @@ if __name__ == "__main__":
     model.calculate_dependent_variables()
 
     print("Neutrino")
-    model.neutrino_dependent.pprint()
+    model.pprint()
 
 
 
