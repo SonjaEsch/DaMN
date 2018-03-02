@@ -17,12 +17,6 @@ from DependentVariables import DependentVariables
 # shall the other functions be separated?
 
 
-
-def diagonalization(matrix):
-    eigenvalues, eigenvectors = np.linalg.eig(np.array(matrix))
-    return eigenvalues.tolist(), eigenvectors.tolist()
-
-
 class ModelT12A(Model.Model):
 
     def __init__(self, higgs, fermion, scalar, neutrino):
@@ -56,8 +50,7 @@ class ModelT12A(Model.Model):
              self.scalar.mass_doublet ** 2 + 1 / 4.0 * self.higgs.vev ** 2 * (
                      self.scalar.lambda_D + self.scalar.lambda_P - 2 * self.scalar.lambda_PP)]]
 
-        self.scalar_dependent.mass_eigenstates, self.scalar_dependent.mixing_matrix = diagonalization(
-            self.scalar_dependent.mass_matrix)
+        self.scalar_dependent.calculate_eigenstates_mixing_matrix_from_mass_matrix()
 
     def calculate_fermion_masses_and_mixings(self):
 
@@ -67,8 +60,8 @@ class ModelT12A(Model.Model):
         self.fermion_dependent.mass_matrix = [[self.fermion.mass_singlet, temp1, temp2],
                                               [temp1, 0, self.fermion.mass_doublet],
                                               [temp2, self.fermion.mass_doublet, 0]]
-        self.fermion_dependent.mass_eigenstates, self.fermion_dependent.mixing_matrix = diagonalization(
-            self.fermion_dependent.mass_matrix)
+
+        self.fermion_dependent.calculate_eigenstates_mixing_matrix_from_mass_matrix()
 
     def calculate_neutrino_masses_and_mixings(self):
         couplings1 = [self.neutrino.g11, self.neutrino.g12, self.neutrino.g13]
@@ -106,9 +99,7 @@ class ModelT12A(Model.Model):
 
             self.neutrino_dependent.mass_matrix.append(row)
 
-        self.neutrino_dependent.mass_eigenstates, self.neutrino_dependent.mixing_matrix = diagonalization(
-            self.neutrino_dependent.mass_matrix)
-
+        self.neutrino_dependent.calculate_eigenstates_mixing_matrix_from_mass_matrix()
         # TODO one of the neutrino mass eigenvalues is actually zero! Due to numerical uncertainties it is around 1e-20
         # should it just be fixed to 0 automatically?
 

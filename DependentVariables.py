@@ -1,4 +1,5 @@
 import pprint
+import numpy as np
 
 
 class DependentVariables:
@@ -7,6 +8,12 @@ class DependentVariables:
         self.mass_matrix = []
         self.mass_eigenstates = []
         self.mixing_matrix = []
+
+    def calculate_eigenstates_mixing_matrix_from_mass_matrix(self):
+        eigenvalues, eigenvectors = np.linalg.eig(np.array(self.mass_matrix))
+        self.mass_eigenstates = eigenvalues.tolist()
+        self.mixing_matrix = eigenvectors.tolist()
+
 
     def __str__(self):
         string = "{}\n".format(self.__class__.__name__)
@@ -26,3 +33,5 @@ class DependentVariables:
 
         print("mixing_matrix")
         pretty.pprint(self.mixing_matrix)
+
+

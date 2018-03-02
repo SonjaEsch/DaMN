@@ -51,8 +51,7 @@ class ModelT12A(Model.Model):
              self.scalar.mass_doublet ** 2 + 1 / 4.0 * self.higgs.vev ** 2 * (
                      self.scalar.lambda_D + self.scalar.lambda_P - 2 * self.scalar.lambda_PP)]]
 
-        self.scalar_dependent.mass_eigenstates, self.scalar_dependent.mixing_matrix = diagonalization(
-            self.scalar_dependent.mass_matrix)
+        self.scalar_dependent.calculate_eigenstates_mixing_matrix_from_mass_matrix()
 
     def calculate_fermion_masses_and_mixings(self):
 
@@ -62,8 +61,7 @@ class ModelT12A(Model.Model):
         self.fermion_dependent.mass_matrix = [[self.fermion.mass_singlet, temp1, temp2],
                                               [temp1, 0, self.fermion.mass_doublet],
                                               [temp2, self.fermion.mass_doublet, 0]]
-        self.fermion_dependent.mass_eigenstates, self.fermion_dependent.mixing_matrix = diagonalization(
-            self.fermion_dependent.mass_matrix)
+        self.fermion_dependent.calculate_eigenstates_mixing_matrix_from_mass_matrix()
 
     def calculate_neutrino_masses_mixings_and_couplings(self):
 
