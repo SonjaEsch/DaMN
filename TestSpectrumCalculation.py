@@ -6,7 +6,7 @@ import Fermion
 import NeutrinoCouplings
 
 
-higgs_creator = Higgs.HiggsCreator("configs/higgs_test.json")
+higgs_creator = Particle.ParticleCreator(Higgs.Higgs, "configs/higgs_test.json")
 higgs = higgs_creator.create()
 
 scalar_creator = Particle.ParticleCreator(Scalar.Scalar, "configs/scalar_test.json")

@@ -153,7 +153,7 @@ class ModelT12A(Model.Model):
 
 
 if __name__ == "__main__":
-    higgs_creator = Higgs.HiggsCreator("configs/higgs.json")
+    higgs_creator = Particle.ParticleCreator(Higgs.Higgs, "configs/higgs.json")
     higgsDummy = higgs_creator.create()
 
     scalar_creator = Particle.ParticleCreator(Scalar.Scalar, "configs/scalar.json")
