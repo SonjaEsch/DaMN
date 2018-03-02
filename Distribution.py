@@ -2,7 +2,8 @@ import random
 
 
 class Distribution:
-    pass
+    def __call__(self):
+        raise NotImplementedError
 
 
 class ConstantDistribution(Distribution):
@@ -87,7 +88,3 @@ def parse_dictionary_to_distribution(distribution_dictionary):
             raise TypeError
 
     return distribution_keywords[distribution_type]["class"](distribution_dictionary)
-
-
-if __name__ == "__main__":
-    pass
