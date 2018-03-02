@@ -4,7 +4,6 @@ import Higgs
 import Scalar
 import Fermion
 import NeutrinoCouplings
-import pprint
 
 
 higgs_creator = Higgs.HiggsCreator("configs/higgs_test.json")
@@ -35,46 +34,14 @@ print(neutrino)
 
 model.calculate_dependent_variables()
 
-pretty = pprint.PrettyPrinter(indent=3, depth=3)
-print("higgs mass")
-pretty.pprint(model.higgs_dependent.mass_eigenstates)
-print("\n")
+print("Higgs")
+model.higgs_dependent.pprint()
 
-print("Scalar mass matrix")
-pretty.pprint(model.scalar_dependent.mass_matrix)
-print("\n")
+print("Scalar")
+model.scalar_dependent.pprint()
 
-print("Scalar mixing matrix")
-pretty.pprint(model.scalar_dependent.mixing_matrix)
-print("\n")
+print("Fermion")
+model.fermion_dependent.pprint()
 
-print("scalar masses")
-pretty.pprint(model.scalar_dependent.mass_eigenstates)
-print("\n")
-
-print("Fermion mass matrix")
-pretty.pprint(model.fermion_dependent.mass_matrix)
-print("\n")
-
-print("Fermion mixing matrix")
-pretty.pprint(model.fermion_dependent.mixing_matrix)
-print("\n")
-
-print("fermion masses")
-pretty.pprint(model.fermion_dependent.mass_eigenstates)
-print("\n")
-
-
-print("Neutrino mass matrix")
-pretty.pprint(model.neutrino_dependent.mass_matrix)
-print("\n")
-
-print("neutrino mixing matrix")
-pretty.pprint(model.neutrino_dependent.mixing_matrix)
-print("\n")
-
-print("neutrino masses")
-pretty.pprint(model.neutrino_dependent.mass_eigenstates)
-print("\n")
-
-
+print("Neutrino")
+model.neutrino_dependent.pprint()

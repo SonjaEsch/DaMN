@@ -6,7 +6,6 @@ import Fermion
 import NeutrinoMasses
 import numpy as np
 import math
-import pprint
 from DependentVariables import DependentVariables
 
 
@@ -139,8 +138,6 @@ class ModelT12A(Model.Model):
 
         neutrino_couplings = np.dot(np.dot(np.dot(u_a, diag_a_sqrt_inverse), np.dot(r, diag_nu_sqrt)), u_nu.transpose())
 
-        # TODO where to put the neutrino couplings?
-        self.neutrino_dependent.couplings = neutrino_couplings
         self.neutrino.g11 = neutrino_couplings[0][0]
         self.neutrino.g12 = neutrino_couplings[0][1]
         self.neutrino.g13 = neutrino_couplings[0][2]
@@ -148,7 +145,6 @@ class ModelT12A(Model.Model):
         self.neutrino.g21 = neutrino_couplings[1][0]
         self.neutrino.g22 = neutrino_couplings[1][1]
         self.neutrino.g23 = neutrino_couplings[1][2]
-
 
     def calculate_dependent_variables(self):
         self.calculate_higgs_mass()
@@ -174,16 +170,8 @@ if __name__ == "__main__":
 
     model.calculate_dependent_variables()
 
-    pretty = pprint.PrettyPrinter(indent=4)
-    print("neutrino mixing matrix")
-    pretty.pprint(model.neutrino_dependent.mixing_matrix)
-    print("\n")
+    print("Neutrino")
+    model.neutrino_dependent.pprint()
 
-    print("neutrino masses")
-    pretty.pprint(model.neutrino_dependent.mass_eigenstates)
-    print("\n")
-
-    print("neutrino couplings")
-    pretty.pprint(model.neutrino_dependent.couplings)
 
 

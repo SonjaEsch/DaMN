@@ -148,31 +148,14 @@ if __name__ == "__main__":
 
     model.calculate_dependent_variables()
 
-    pretty = pprint.PrettyPrinter(indent=4)
-    print("higgs mass")
-    pretty.pprint(model.higgs_dependent.mass_eigenstates)
-    print("\n")
+    print("Higgs")
+    model.higgs_dependent.pprint()
 
-    print("Scalar mixing matrix")
-    pretty.pprint(model.scalar_dependent.mixing_matrix)
-    print("\n")
+    print("Scalar")
+    model.scalar_dependent.pprint()
 
-    print("scalar masses")
-    pretty.pprint(model.scalar_dependent.mass_eigenstates)
-    print("\n")
+    print("Fermion")
+    model.fermion_dependent.pprint()
 
-    print("Fermion mixing matrix")
-    pretty.pprint(model.fermion_dependent.mixing_matrix)
-    print("\n")
-
-    print("fermion masses")
-    pretty.pprint(model.fermion_dependent.mass_eigenstates)
-    print("\n")
-
-    print("neutrino mixing matrix")
-    pretty.pprint(model.neutrino_dependent.mixing_matrix)
-    print("\n")
-
-    print("neutrino masses")
-    pretty.pprint(model.neutrino_dependent.mass_eigenstates)
-    print("\n")
+    print("Neutrino")
+    model.neutrino_dependent.pprint()
