@@ -7,7 +7,7 @@ class Neutrino(Particle.Particle):
 
 
 if __name__ == "__main__":
-    neutrino_creator = Particle.ParticleCreator(Neutrino, "neutrino_masses.json")
+    neutrino_creator = Particle.ParticleCreator(Neutrino, "configs/neutrino_masses.json")
     for i in range(1000):
         neutrino = neutrino_creator.create()
         print(neutrino.to_json())

@@ -7,16 +7,16 @@ import NeutrinoCouplings
 import pprint
 
 
-higgs_creator = Higgs.HiggsCreator("higgs_test.json")
+higgs_creator = Higgs.HiggsCreator("configs/higgs_test.json")
 higgs = higgs_creator.create()
 
-scalar_creator = Particle.ParticleCreator(Scalar.Scalar, "scalar_test.json")
+scalar_creator = Particle.ParticleCreator(Scalar.Scalar, "configs/scalar_test.json")
 scalar = scalar_creator.create()
 
-fermion_creator = Particle.ParticleCreator(Fermion.Fermion, "fermion_test.json")
+fermion_creator = Particle.ParticleCreator(Fermion.Fermion, "configs/fermion_test.json")
 fermion = fermion_creator.create()
 
-neutrino_creator = Particle.ParticleCreator(NeutrinoCouplings.Neutrino, "neutrino_couplings_test.json")
+neutrino_creator = Particle.ParticleCreator(NeutrinoCouplings.Neutrino, "configs/neutrino_couplings_test.json")
 neutrino = neutrino_creator.create()
 
 print(higgs)

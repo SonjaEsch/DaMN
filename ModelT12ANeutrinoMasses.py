@@ -158,16 +158,16 @@ class ModelT12A(Model.Model):
 
 
 if __name__ == "__main__":
-    higgs_creator = Higgs.HiggsCreator("higgs.json")
+    higgs_creator = Higgs.HiggsCreator("configs/higgs.json")
     higgsDummy = higgs_creator.create()
 
-    scalar_creator = Particle.ParticleCreator(Scalar.Scalar, "scalar.json")
+    scalar_creator = Particle.ParticleCreator(Scalar.Scalar, "configs/scalar.json")
     scalarDummy = scalar_creator.create()
 
-    fermion_creator = Particle.ParticleCreator(Fermion.Fermion, "fermion.json")
+    fermion_creator = Particle.ParticleCreator(Fermion.Fermion, "configs/fermion.json")
     fermionDummy = fermion_creator.create()
 
-    neutrino_creator = Particle.ParticleCreator(NeutrinoMasses.Neutrino, "neutrino_masses.json")
+    neutrino_creator = Particle.ParticleCreator(NeutrinoMasses.Neutrino, "configs/neutrino_masses.json")
     neutrinoDummy = neutrino_creator.create()
 
     model = ModelT12A(higgsDummy, fermionDummy, scalarDummy, neutrinoDummy)

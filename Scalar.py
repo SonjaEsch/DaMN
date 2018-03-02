@@ -6,7 +6,7 @@ class Scalar(Particle.Particle):
 
 
 if __name__ == "__main__":
-    scalar_creator = Particle.ParticleCreator(Scalar, "scalar.json")
+    scalar_creator = Particle.ParticleCreator(Scalar, "configs/scalar.json")
     for i in range(1000):
         scalar = scalar_creator.create()
         print(scalar.to_json())
