@@ -6,7 +6,7 @@ import Fermion
 import NeutrinoCouplings
 import numpy as np
 import pprint
-
+from DependentVariables import DependentVariables
 
 # TODO write a routine to save/restore model points easily
 # TODO in other scenarios the neutrino couplings are not input parameter but the mass eigenstates and mixing matrix are
@@ -16,22 +16,6 @@ import pprint
 # TODO only the routine for neutrinos is different, should one still leave this as one model construction?
 # shall the other functions be separated?
 
-# TODO should this be in an extra file?
-class DependentVariables:
-
-    def __init__(self):
-        mass_matrix = []
-        mass_eigenstates = []
-        mixing_matrix = []
-
-    def __str__(self):
-        # TODO the print routine does not print DependentVariable objects nicely, the matrices do not look good
-
-        string = "{}\n".format(self.__class__.__name__)
-        for key in self.__dict__:
-            string += "\t{}: {}\n".format(key, self.__dict__[key])
-
-        return string
 
 
 def diagonalization(matrix):
@@ -52,13 +36,6 @@ class ModelT12A(Model.Model):
         self.scalar_dependent = DependentVariables()
         self.fermion_dependent = DependentVariables()
         self.neutrino_dependent = DependentVariables()
-
-    def calculate_dependent_variables(self):
-        # TODO one should only be able to use this function from outside, the other should not be avilable
-        self.calculate_higgs_mass()
-        self.calculate_scalar_masses_and_mixings()
-        self.calculate_fermion_masses_and_mixings()
-        self.calculate_neutrino_masses_and_mixings()
 
     def calculate_higgs_mass(self):
         self.higgs_dependent.mass_matrix = [np.sqrt(self.higgs.lambda_higgs * self.higgs.vev ** 2)]
@@ -136,6 +113,12 @@ class ModelT12A(Model.Model):
         # TODO one of the neutrino mass eigenvalues is actually zero! Due to numerical uncertainties it is around 1e-20
         # should it just be fixed to 0 automatically?
 
+    def calculate_dependent_variables(self):
+        # TODO one should only be able to use this function from outside, the other should not be avilable
+        self.calculate_higgs_mass()
+        self.calculate_scalar_masses_and_mixings()
+        self.calculate_fermion_masses_and_mixings()
+        self.calculate_neutrino_masses_and_mixings()
 
 if __name__ == "__main__":
     higgs_creator = Higgs.HiggsCreator("higgs.json")
