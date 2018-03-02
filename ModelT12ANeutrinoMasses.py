@@ -12,12 +12,6 @@ from DependentVariables import DependentVariables
 # TODO all questions for ModelT12ANeutrinoCouplings apply here as well
 # TODO catch all exceptions otherwise one could mess up a whole scan afterwards
 
-
-def diagonalization(matrix):
-    eigenvalues, eigenvectors = np.linalg.eig(np.array(matrix))
-    return eigenvalues.tolist(), eigenvectors.tolist()
-
-
 class ModelT12A(Model.Model):
 
     def __init__(self, higgs, fermion, scalar, neutrino):
@@ -106,7 +100,10 @@ class ModelT12A(Model.Model):
         matrix_a = [[-co11, co12], [co12, -co22]]
         # TODO are the signs reasonable?
 
-        eigenvalues, eigenvectors = diagonalization(matrix_a)
+        eigenvalues_np_array, eigenvectors_np_array = np.linalg.eig(np.array(matrix_a))
+        eigenvalues = eigenvalues_np_array.tolist()
+        eigenvectors = eigenvectors_np_array.tolist()
+
         # TODO raise exception if one or more eigenvalues are zero! this parameter point does not converge
         # TODO it is necessary to use a new one
         # TODO how to stop and not proceed in this case?
