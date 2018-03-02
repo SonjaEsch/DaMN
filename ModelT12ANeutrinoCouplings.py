@@ -8,14 +8,6 @@ import numpy as np
 import math
 from DependentVariables import DependentVariables
 
-# TODO write a routine to save/restore model points easily
-# TODO in other scenarios the neutrino couplings are not input parameter but the mass eigenstates and mixing matrix are
-# TODO if one would like to write all couplings to micromegas or spheno input how can one have everything accessible in the same way?
-# is it a good idea to add the couplings to the neutrino element in model afterwards ??
-
-# TODO only the routine for neutrinos is different, should one still leave this as one model construction?
-# shall the other functions be separated?
-
 
 class ModelT12A(Model.Model):
 
@@ -37,29 +29,26 @@ class ModelT12A(Model.Model):
         self.higgs_dependent.mixing_matrix = [1]
 
     def calculate_scalar_masses_and_mixings(self):
+        mixing_term = self.scalar.A * self.higgs.vev / math.sqrt(2.0)
+        couplings_factor = 1 / 4.0 * self.higgs.vev ** 2
+        doublet_couplings_plus = couplings_factor*(self.scalar.lambda_D + self.scalar.lambda_P + 2*self.scalar.lambda_PP)
+        doublet_couplings_minus = couplings_factor*(self.scalar.lambda_D + self.scalar.lambda_P - 2*self.scalar.lambda_PP)
+
         self.scalar_dependent.mass_matrix = [
-            [self.scalar.mass_singlet ** 2 + 1 / 4.0 * self.higgs.vev ** 2 * self.scalar.lambda_S,
-             self.scalar.A * self.higgs.vev / math.sqrt(2.0),
-             0],
-            [self.scalar.A * self.higgs.vev / math.sqrt(2.0),
-             self.scalar.mass_doublet ** 2 + 1 / 4.0 * self.higgs.vev ** 2 * (
-                     self.scalar.lambda_D + self.scalar.lambda_P + 2 * self.scalar.lambda_PP),
-             0],
-            [0,
-             0,
-             self.scalar.mass_doublet ** 2 + 1 / 4.0 * self.higgs.vev ** 2 * (
-                     self.scalar.lambda_D + self.scalar.lambda_P - 2 * self.scalar.lambda_PP)]]
+            [self.scalar.mass_singlet ** 2 + 1 / 4.0 * self.higgs.vev ** 2 * self.scalar.lambda_S, mixing_term, 0],
+            [mixing_term, self.scalar.mass_doublet ** 2 + doublet_couplings_plus, 0],
+            [0, 0, self.scalar.mass_doublet ** 2 + doublet_couplings_minus]]
 
         self.scalar_dependent.calculate_eigenstates_mixing_matrix_from_mass_matrix()
 
     def calculate_fermion_masses_and_mixings(self):
 
-        temp1 = self.fermion.y1 * self.higgs.vev / math.sqrt(2.0)
-        temp2 = self.fermion.y2 * self.higgs.vev / math.sqrt(2.0)
+        y1_term = self.fermion.y1 * self.higgs.vev / math.sqrt(2.0)
+        y2_term = self.fermion.y2 * self.higgs.vev / math.sqrt(2.0)
 
-        self.fermion_dependent.mass_matrix = [[self.fermion.mass_singlet, temp1, temp2],
-                                              [temp1, 0, self.fermion.mass_doublet],
-                                              [temp2, self.fermion.mass_doublet, 0]]
+        self.fermion_dependent.mass_matrix = [[self.fermion.mass_singlet, y1_term, y2_term],
+                                              [y1_term, 0, self.fermion.mass_doublet],
+                                              [y2_term, self.fermion.mass_doublet, 0]]
 
         self.fermion_dependent.calculate_eigenstates_mixing_matrix_from_mass_matrix()
 
