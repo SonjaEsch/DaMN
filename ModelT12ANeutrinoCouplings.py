@@ -47,7 +47,9 @@ class ModelT12A(Model.Model):
             [0, 0, self.scalar.mass_doublet ** 2 + doublet_couplings_minus]]
 
         self.scalar_dependent.calculate_eigenstates_mixing_matrix_from_mass_matrix()
-        # TODO spectrum is not necessarily physical, negative squared masses can occur -> rais exception!
+
+        if min(self.scalar_dependent.mass_eigenstates) < 0:
+            raise ValueError("calculate_scalar_masses_and_mixings: Found negative value in mass_eigenstates")
 
     def calculate_fermion_masses_and_mixings(self):
 
