@@ -13,10 +13,10 @@ class Model:
         return string
 
     def calculate_dependent_variables(self):
-        pass
+        raise NotImplementedError
 
     def from_json(self):
-        pass
+        raise NotImplementedError
 
     def to_json(self):
         return json.dumps(self.__dict__)
