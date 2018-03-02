@@ -108,16 +108,16 @@ class ModelT12A(Model.Model):
 
     def pprint(self):
         print(self.higgs)
-        model.higgs_dependent.pprint()
+        self.higgs_dependent.pprint()
 
         print(self.scalar)
-        model.scalar_dependent.pprint()
+        self.scalar_dependent.pprint()
 
         print(self.fermion)
-        model.fermion_dependent.pprint()
+        self.fermion_dependent.pprint()
 
         print(self.neutrino)
-        model.neutrino_dependent.pprint()
+        self.neutrino_dependent.pprint()
 
 
 if __name__ == "__main__":

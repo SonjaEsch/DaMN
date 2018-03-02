@@ -1,4 +1,4 @@
-import Model
+import ModelT12ANeutrinoCouplings
 import Particle
 import Higgs
 import Scalar
@@ -6,63 +6,13 @@ import Fermion
 import NeutrinoMasses
 import numpy as np
 import math
-from DependentVariables import DependentVariables
 
 
 # TODO catch all exceptions otherwise one could mess up a whole scan afterwards
 
-class ModelT12A(Model.Model):
+class ModelT12A(ModelT12ANeutrinoCouplings.ModelT12A):
 
-    def __init__(self, higgs, fermion, scalar, neutrino):
-        super().__init__()
-        self.higgs = higgs
-        self.scalar = scalar
-        self.fermion = fermion
-        self.neutrino = neutrino
-
-        self.higgs_dependent = DependentVariables()
-        self.scalar_dependent = DependentVariables()
-        self.fermion_dependent = DependentVariables()
-        self.neutrino_dependent = DependentVariables()
-
-    def calculate_dependent_variables(self):
-        self.calculate_higgs_mass()
-        self.calculate_scalar_masses_and_mixings()
-        self.calculate_fermion_masses_and_mixings()
-        self.calculate_neutrino_masses_mixings_and_couplings()
-
-    def calculate_higgs_mass(self):
-        self.higgs_dependent.mass_matrix = [math.sqrt(self.higgs.lambda_higgs * self.higgs.vev ** 2)]
-        self.higgs_dependent.mass_eigenstates = self.higgs_dependent.mass_matrix
-        self.higgs_dependent.mixing_matrix = [1]
-
-    def calculate_scalar_masses_and_mixings(self):
-        self.scalar_dependent.mass_matrix = [
-            [self.scalar.mass_singlet ** 2 + 1 / 4.0 * self.higgs.vev ** 2 * self.scalar.lambda_S,
-             self.scalar.A * self.higgs.vev / math.sqrt(2.0),
-             0],
-            [self.scalar.A * self.higgs.vev / math.sqrt(2.0),
-             self.scalar.mass_doublet ** 2 + 1 / 4.0 * self.higgs.vev ** 2 * (
-                     self.scalar.lambda_D + self.scalar.lambda_P + 2 * self.scalar.lambda_PP),
-             0],
-            [0,
-             0,
-             self.scalar.mass_doublet ** 2 + 1 / 4.0 * self.higgs.vev ** 2 * (
-                     self.scalar.lambda_D + self.scalar.lambda_P - 2 * self.scalar.lambda_PP)]]
-
-        self.scalar_dependent.calculate_eigenstates_mixing_matrix_from_mass_matrix()
-
-    def calculate_fermion_masses_and_mixings(self):
-
-        temp1 = self.fermion.y1 * self.higgs.vev / math.sqrt(2.0)
-        temp2 = self.fermion.y2 * self.higgs.vev / math.sqrt(2.0)
-
-        self.fermion_dependent.mass_matrix = [[self.fermion.mass_singlet, temp1, temp2],
-                                              [temp1, 0, self.fermion.mass_doublet],
-                                              [temp2, self.fermion.mass_doublet, 0]]
-        self.fermion_dependent.calculate_eigenstates_mixing_matrix_from_mass_matrix()
-
-    def calculate_neutrino_masses_mixings_and_couplings(self):
+    def calculate_neutrino_dependent(self):
 
         m1 = 0
         m2 = math.sqrt(self.neutrino.delta_m12_squared_e5 * 10 ** (-5))
@@ -83,25 +33,7 @@ class ModelT12A(Model.Model):
                                                  [s12 * c13, c12 * c23 - s12 * s23 * s13, -c12 * s23 - s12 * c23 * s13],
                                                  [s13, s23 * c13, c23 * c13]]
 
-        co11 = 0.0
-        co12 = 0.0
-        co22 = 0.0
-
-        for j in range(3):
-            for m in range(3):
-                mass_fermion = self.fermion_dependent.mass_eigenstates[j]
-                mass_scalar = math.sqrt(self.scalar_dependent.mass_eigenstates[m])
-
-                mixing_fermion = self.fermion_dependent.mixing_matrix
-                mixing_scalar = self.scalar_dependent.mixing_matrix
-
-                ljm = 1 / (16 * math.pi ** 2) * mass_fermion / (mass_scalar ** 2 - mass_fermion ** 2) * (
-                        mass_fermion ** 2 * math.log(float(mass_fermion ** 2)) - mass_scalar ** 2 * math.log((mass_scalar ** 2)))
-
-                co11 += mixing_fermion[2][j] ** 2 * mixing_scalar[0][m] ** 2 * ljm
-                co12 += mixing_fermion[0][j] * mixing_fermion[2][j] * mixing_scalar[0][m] * mixing_scalar[1][m] * ljm
-                co22 += mixing_fermion[0][j] ** 2 * (mixing_scalar[1][m] ** 2 - mixing_scalar[2][m] ** 2) * ljm
-
+        co11, co12, co22 = self.get_neutrino_coefficients()
         matrix_a = [[-co11, co12], [co12, -co22]]
         # TODO are the signs reasonable?
 
@@ -146,8 +78,6 @@ class ModelT12A(Model.Model):
         self.neutrino.g23 = neutrino_couplings[1][2]
 
 
-
-
 if __name__ == "__main__":
     higgs_creator = Particle.ParticleCreator(Higgs.Higgs, "configs/higgs.json")
     higgsDummy = higgs_creator.create()
@@ -165,7 +95,6 @@ if __name__ == "__main__":
 
     model.calculate_dependent_variables()
 
-    print("Neutrino")
     model.pprint()
 
 
