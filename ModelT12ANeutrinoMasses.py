@@ -11,7 +11,7 @@ from DependentVariables import DependentVariables
 
 # TODO all questions for ModelT12ANeutrinoCouplings apply here as well
 # TODO catch all exceptions otherwise one could mess up a whole scan afterwards
-# TODO do not use!!!! np.sqrt() it is too slow use math instead
+
 
 def diagonalization(matrix):
     eigenvalues, eigenvectors = np.linalg.eig(np.array(matrix))
@@ -99,8 +99,7 @@ class ModelT12A(Model.Model):
                 mixing_scalar = self.scalar_dependent.mixing_matrix
 
                 ljm = 1 / (16 * math.pi ** 2) * mass_fermion / (mass_scalar ** 2 - mass_fermion ** 2) * (
-                        mass_fermion ** 2 * math.log(float(mass_fermion ** 2)) - mass_scalar ** 2 * math.log(
-                    float(mass_scalar ** 2)))
+                        mass_fermion ** 2 * math.log(float(mass_fermion ** 2)) - mass_scalar ** 2 * math.log((mass_scalar ** 2)))
 
                 co11 += mixing_fermion[2][j] ** 2 * mixing_scalar[0][m] ** 2 * ljm
                 co12 += mixing_fermion[0][j] * mixing_fermion[2][j] * mixing_scalar[0][m] * mixing_scalar[1][m] * ljm

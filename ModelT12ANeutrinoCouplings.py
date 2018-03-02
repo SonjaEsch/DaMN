@@ -5,7 +5,7 @@ import Scalar
 import Fermion
 import NeutrinoCouplings
 import numpy as np
-import pprint
+import math
 from DependentVariables import DependentVariables
 
 # TODO write a routine to save/restore model points easily
@@ -38,16 +38,16 @@ class ModelT12A(Model.Model):
         self.neutrino_dependent = DependentVariables()
 
     def calculate_higgs_mass(self):
-        self.higgs_dependent.mass_matrix = [np.sqrt(self.higgs.lambda_higgs * self.higgs.vev ** 2)]
+        self.higgs_dependent.mass_matrix = [math.sqrt(self.higgs.lambda_higgs * self.higgs.vev ** 2)]
         self.higgs_dependent.mass_eigenstates = self.higgs_dependent.mass_matrix
         self.higgs_dependent.mixing_matrix = [1]
 
     def calculate_scalar_masses_and_mixings(self):
         self.scalar_dependent.mass_matrix = [
             [self.scalar.mass_singlet ** 2 + 1 / 4.0 * self.higgs.vev ** 2 * self.scalar.lambda_S,
-             self.scalar.A * self.higgs.vev / np.sqrt(2.0),
+             self.scalar.A * self.higgs.vev / math.sqrt(2.0),
              0],
-            [self.scalar.A * self.higgs.vev / np.sqrt(2.0),
+            [self.scalar.A * self.higgs.vev / math.sqrt(2.0),
              self.scalar.mass_doublet ** 2 + 1 / 4.0 * self.higgs.vev ** 2 * (
                      self.scalar.lambda_D + self.scalar.lambda_P + 2 * self.scalar.lambda_PP),
              0],
@@ -61,8 +61,8 @@ class ModelT12A(Model.Model):
 
     def calculate_fermion_masses_and_mixings(self):
 
-        temp1 = self.fermion.y1 * self.higgs.vev / np.sqrt(2.0)
-        temp2 = self.fermion.y2 * self.higgs.vev / np.sqrt(2.0)
+        temp1 = self.fermion.y1 * self.higgs.vev / math.sqrt(2.0)
+        temp2 = self.fermion.y2 * self.higgs.vev / math.sqrt(2.0)
 
         self.fermion_dependent.mass_matrix = [[self.fermion.mass_singlet, temp1, temp2],
                                               [temp1, 0, self.fermion.mass_doublet],
@@ -83,15 +83,14 @@ class ModelT12A(Model.Model):
         for j in range(3):
             for m in range(3):
                 mass_fermion = self.fermion_dependent.mass_eigenstates[j]
-                mass_scalar = np.sqrt(self.scalar_dependent.mass_eigenstates[m])
+                mass_scalar = math.sqrt(self.scalar_dependent.mass_eigenstates[m])
 
                 mixing_fermion = self.fermion_dependent.mixing_matrix
                 mixing_scalar = self.scalar_dependent.mixing_matrix
 
                 # TODO important! notice the scalar mass matrix is quadratic and write it somewhere so people will know
                 ljm = 1 / (16 * np.pi ** 2) * mass_fermion / (mass_scalar ** 2 - mass_fermion ** 2) * (
-                        mass_fermion ** 2 * np.log(float(mass_fermion ** 2)) - mass_scalar ** 2 * np.log(
-                    float(mass_scalar ** 2)))
+                        mass_fermion ** 2 * math.log(float(mass_fermion ** 2)) - mass_scalar ** 2 * math.log((mass_scalar ** 2)))
 
                 c11 += mixing_fermion[2][j] ** 2 * mixing_scalar[0][m] ** 2 * ljm
                 c12 += mixing_fermion[0][j] * mixing_fermion[2][j] * mixing_scalar[0][m] * mixing_scalar[1][m] * ljm
