@@ -41,12 +41,6 @@ class ModelT12A(ModelT12ANeutrinoCouplings.ModelT12A):
         eigenvalues = eigenvalues_np_array.tolist()
         eigenvectors = eigenvectors_np_array.tolist()
 
-        # TODO raise exception if one or more eigenvalues are zero! this parameter point does not converge
-        # TODO it is necessary to use a new one
-        # TODO how to stop and not proceed in this case?
-        # TODO question: how many points are excluded because of this?
-        # TODO think about better text for exception
-
         temp = []
 
         for entry in eigenvalues:
