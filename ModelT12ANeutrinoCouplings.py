@@ -23,6 +23,13 @@ class ModelT12A(Model.Model):
         self.fermion_dependent = DependentVariables()
         self.neutrino_dependent = DependentVariables()
 
+    def calculate_dependent_variables(self):
+        # TODO one should only be able to use this function from outside, the other should not be avilable
+        self.calculate_higgs_mass()
+        self.calculate_scalar_masses_and_mixings()
+        self.calculate_fermion_masses_and_mixings()
+        self.calculate_neutrino_masses_and_mixings()
+
     def calculate_higgs_mass(self):
         self.higgs_dependent.mass_matrix = [math.sqrt(self.higgs.lambda_higgs * self.higgs.vev ** 2)]
         self.higgs_dependent.mass_eigenstates = self.higgs_dependent.mass_matrix
@@ -40,6 +47,7 @@ class ModelT12A(Model.Model):
             [0, 0, self.scalar.mass_doublet ** 2 + doublet_couplings_minus]]
 
         self.scalar_dependent.calculate_eigenstates_mixing_matrix_from_mass_matrix()
+        # TODO spectrum is not necessarily physical, negative squared masses can occur -> rais exception!
 
     def calculate_fermion_masses_and_mixings(self):
 
@@ -53,52 +61,50 @@ class ModelT12A(Model.Model):
         self.fermion_dependent.calculate_eigenstates_mixing_matrix_from_mass_matrix()
 
     def calculate_neutrino_masses_and_mixings(self):
+
+        co11, co12, co22 = self.get_neutrino_coefficients()
+
         couplings1 = [self.neutrino.g11, self.neutrino.g12, self.neutrino.g13]
         couplings2 = [self.neutrino.g21, self.neutrino.g22, self.neutrino.g23]
-
         self.neutrino_dependent.mass_matrix = []
 
-        c11 = 0.0
-        c12 = 0.0
-        c22 = 0.0
+        for i in range(3):
+            row = []
+            for k in range(3):
+                row.append(-co11 * couplings1[i] * couplings1[k]
+                           + co12 * couplings1[i] * couplings2[k]
+                           + co12 * couplings1[k] * couplings2[i]
+                           - co22 * couplings2[i] * couplings2[k])
+
+            self.neutrino_dependent.mass_matrix.append(row)
+
+        self.neutrino_dependent.calculate_eigenstates_mixing_matrix_from_mass_matrix()
+
+    def get_neutrino_coefficients(self):
+        co11 = 0.0
+        co12 = 0.0
+        co22 = 0.0
+
+        mixing_fermion = self.fermion_dependent.mixing_matrix
+        mixing_scalar = self.scalar_dependent.mixing_matrix
 
         for j in range(3):
             for m in range(3):
                 mass_fermion = self.fermion_dependent.mass_eigenstates[j]
                 mass_scalar = math.sqrt(self.scalar_dependent.mass_eigenstates[m])
 
-                mixing_fermion = self.fermion_dependent.mixing_matrix
-                mixing_scalar = self.scalar_dependent.mixing_matrix
-
                 # TODO important! notice the scalar mass matrix is quadratic and write it somewhere so people will know
-                ljm = 1 / (16 * np.pi ** 2) * mass_fermion / (mass_scalar ** 2 - mass_fermion ** 2) * (
-                        mass_fermion ** 2 * math.log(float(mass_fermion ** 2)) - mass_scalar ** 2 * math.log((mass_scalar ** 2)))
+                mass_combination_jm = 1 / (16 * np.pi ** 2) * mass_fermion / (mass_scalar ** 2 - mass_fermion ** 2) * (
+                        mass_fermion ** 2 * math.log(float(mass_fermion ** 2)) - mass_scalar ** 2 * math.log(
+                    (mass_scalar ** 2)))
 
-                c11 += mixing_fermion[2][j] ** 2 * mixing_scalar[0][m] ** 2 * ljm
-                c12 += mixing_fermion[0][j] * mixing_fermion[2][j] * mixing_scalar[0][m] * mixing_scalar[1][m] * ljm
-                c22 += mixing_fermion[0][j] ** 2 * (mixing_scalar[1][m] ** 2 - mixing_scalar[2][m] ** 2) * ljm
-
-        for i in range(3):
-            row = []
-            for k in range(3):
-                row.append(-c11 * couplings1[i] * couplings1[k]
-                           + c12 * couplings1[i] * couplings2[k]
-                           + c12 * couplings1[k] * couplings2[i]
-                           - c22 * couplings2[i] * couplings2[k])
-
-            self.neutrino_dependent.mass_matrix.append(row)
-
-        self.neutrino_dependent.calculate_eigenstates_mixing_matrix_from_mass_matrix()
-        # TODO one of the neutrino mass eigenvalues is actually zero! Due to numerical uncertainties it is around 1e-20
-        # should it just be fixed to 0 automatically?
-
-    def calculate_dependent_variables(self):
-        # TODO one should only be able to use this function from outside, the other should not be avilable
-        self.calculate_higgs_mass()
-        self.calculate_scalar_masses_and_mixings()
-        self.calculate_fermion_masses_and_mixings()
-        self.calculate_neutrino_masses_and_mixings()
-
+                co11 += mixing_fermion[2][j] ** 2 * mixing_scalar[0][m] ** 2 * mass_combination_jm
+                co12 += mixing_fermion[0][j] * mixing_fermion[2][j] * mixing_scalar[0][m] * mixing_scalar[1][
+                    m] * mass_combination_jm
+                co22 += mixing_fermion[0][j] ** 2 * (
+                            mixing_scalar[1][m] ** 2 - mixing_scalar[2][m] ** 2) * mass_combination_jm
+        return co11, co12, co22
+        
 
 if __name__ == "__main__":
     higgs_creator = Particle.ParticleCreator(Higgs.Higgs, "configs/higgs.json")
