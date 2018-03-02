@@ -20,3 +20,7 @@ class Model:
 
     def to_json(self):
         return json.dumps(self.__dict__)
+
+    def pprint(self):
+        pass
+

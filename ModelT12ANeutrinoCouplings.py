@@ -105,7 +105,20 @@ class ModelT12A(Model.Model):
                 co22 += mixing_fermion[0][j] ** 2 * (
                             mixing_scalar[1][m] ** 2 - mixing_scalar[2][m] ** 2) * mass_combination_jm
         return co11, co12, co22
-        
+
+    def pprint(self):
+        print(self.higgs)
+        model.higgs_dependent.pprint()
+
+        print(self.scalar)
+        model.scalar_dependent.pprint()
+
+        print(self.fermion)
+        model.fermion_dependent.pprint()
+
+        print(self.neutrino)
+        model.neutrino_dependent.pprint()
+
 
 if __name__ == "__main__":
     higgs_creator = Particle.ParticleCreator(Higgs.Higgs, "configs/higgs.json")
@@ -124,14 +137,5 @@ if __name__ == "__main__":
 
     model.calculate_dependent_variables()
 
-    print("Higgs")
-    model.higgs_dependent.pprint()
+    model.pprint()
 
-    print("Scalar")
-    model.scalar_dependent.pprint()
-
-    print("Fermion")
-    model.fermion_dependent.pprint()
-
-    print("Neutrino")
-    model.neutrino_dependent.pprint()
