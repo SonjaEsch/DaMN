@@ -1,0 +1,72 @@
+Block MODSEL      	#
+1 	0               #  1/0: High/low scale input
+2 	1              	# Boundary Condition
+6 	1               # Generation Mixing
+12 	1000.          	# Renormalization scale
+
+Block SMINPUTS    	# Standard Model inputs
+2 	1.166370E-05    # G_F,Fermi constant
+3 	1.187000E-01    # alpha_s(MZ) SM MSbar
+4 	9.118870E+01    # Z-boson pole mass
+5 	4.180000E+00    # m_b(mb) SM MSbar
+6 	1.735000E+02    # m_top(pole)
+7 	1.776690E+00    # m_tau(pole)
+
+Block MINPAR      	# Input parameters
+1   {lambda_higgs:e}    # LambdaIN
+2   {vev:e}    # vevinput
+3   80.385000E+00    # MWinput
+
+Block SPhenoInput   	# SPheno specific input
+  1 	-1              # error level
+  2 	0              	# SPA conventions
+ 11 	0               # calculate branching ratios
+ 13 	0               # 3-Body decays: none (0),fermion (1), scalar (2), both (3)
+ 14 	1               # Run couplings to scale of decaying particle
+ 12 	1.000E-04       # write only branching ratios larger than this value
+ 15 	1.000E-30       # write only decay if width larger than this value
+ 31 	-1              # fixed GUT scale (-1: dynamical GUT scale)
+ 32 	0               # Strict unification
+ 34 	1.000E-04       # Precision of mass calculation
+ 35 	40              # Maximal number of iterations
+ 37 	1               # Set Yukawa scheme
+ 38 	2               # 1- or 2-Loop RGEs
+ 50 	0               # Majorana phases: use only positive masses
+ 51 	1               # Write Output in CKM basis
+ 52 	1               # Write spectrum in case of tachyonic states
+ 55 	0               # Calculate one loop masses
+ 57 	1               # Calculate low energy constraints
+ 65 	1               # Solution tadpole equation
+ 75 	0               # Write WHIZARD files
+ 76 	0               # Write HiggsBounds file
+ 86 	0.              # Maximal width to be counted as invisible in Higgs decays; -1: only LSP
+510 	0.              # Write tree level values for tadpole solutions
+515 	0               # Write parameter values at GUT scale
+520 	0.              # Write effective Higgs couplings (HiggsBounds blocks)
+525 	0.              # Write loop contributions to diphoton decay of Higgs
+530 	0.              # Write Blocks for Vevacious
+
+Block NUA1IN    	#
+1   {g11:e}    # na1(1)
+2   {g12:e}    # na1(2)
+3   {g13:e}    # na1(3)
+
+Block NUA2IN   	#
+1   {g21:e}    # na2(1)
+2   {g22:e}    # na2(2)
+3   {g23:e}    # na2(3)
+
+Block NEWININ   	#
+1   {fermion_mass_doublet:e}    # mD
+4   {fermion_mass_singlet:e}    # mS
+2   {y1:e}    # yd1
+3   {y2:e}    # yd2
+
+Block HDMIN		#
+5   {A:e}    # AA
+2   {lambda_D:e}    # LamD
+3   {lambda_P:e}    # LDP
+4   {lambda_PP:e}    # DPP
+1   {lambda_S:e}    # LamS
+7   {scalar_mass_doublet_squared:e}    # MD2
+6   {scalar_mass_singlet_squared:e}    # MS2
