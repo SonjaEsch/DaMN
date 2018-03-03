@@ -50,6 +50,8 @@ class ModelT12A(Model.Model):
         if min(self.scalar_dependent.mass_eigenstates) < 0:
             raise ValueError("calculate_scalar_dependent: Found negative value in mass_eigenstates")
 
+        self.scalar_dependent.mass_eigenstates = [math.sqrt(value) for value in self.scalar_dependent.mass_eigenstates]
+
     def calculate_fermion_dependent(self):
 
         y1_term = self.fermion.y1 * self.higgs.vev / math.sqrt(2.0)
@@ -92,9 +94,8 @@ class ModelT12A(Model.Model):
         for j in range(3):
             for m in range(3):
                 mass_fermion = self.fermion_dependent.mass_eigenstates[j]
-                mass_scalar = math.sqrt(self.scalar_dependent.mass_eigenstates[m])
+                mass_scalar = self.scalar_dependent.mass_eigenstates[m]
 
-                # TODO important! notice the scalar mass matrix is quadratic and write it somewhere so people will know
                 mass_combination_jm = 1 / (16 * np.pi ** 2) * mass_fermion / (mass_scalar ** 2 - mass_fermion ** 2) * (
                         mass_fermion ** 2 * math.log(float(mass_fermion ** 2)) - mass_scalar ** 2
                         * math.log((mass_scalar ** 2)))
