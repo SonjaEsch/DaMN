@@ -17,8 +17,20 @@ class ModelSPheno(ModelT12ANeutrinoCouplings.ModelT12A):
     spheno_executable_path = "./SPhenoT12aTest"
     spheno_output_file_path = "/tmp/sphenoOutput.slha"
 
-    def __init__(self, higgs, fermion, scalar, neutrino):
+    def __init__(
+            self,
+            higgs,
+            fermion,
+            scalar,
+            neutrino,
+            calculate_branching_ratios=True,
+            calculate_one_loop_masses=True
+            ):
+        
         super().__init__(higgs, fermion, scalar, neutrino)
+
+        self.calculate_branching_ratios = calculate_branching_ratios
+        self.calculate_one_loop_masses = calculate_one_loop_masses
 
         if self.input_slha_template_data is None:
             with open(self.input_slha_template_path, "r") as f:
@@ -26,6 +38,9 @@ class ModelSPheno(ModelT12ANeutrinoCouplings.ModelT12A):
 
     def write_slha_file(self):
         parameter_dict = {
+            "branching_ratios": int(self.calculate_branching_ratios),
+            "one_loop_masses": int(self.calculate_one_loop_masses),
+            
             "lambda_higgs": self.higgs.lambda_higgs,
             "vev": self.higgs.vev,
 

@@ -20,7 +20,7 @@ Block MINPAR      	# Input parameters
 Block SPhenoInput   	# SPheno specific input
   1 	-1              # error level
   2 	0              	# SPA conventions
- 11 	0               # calculate branching ratios
+ 11 	{branching_ratios}               # calculate branching ratios
  13 	0               # 3-Body decays: none (0),fermion (1), scalar (2), both (3)
  14 	1               # Run couplings to scale of decaying particle
  12 	1.000E-04       # write only branching ratios larger than this value
@@ -34,7 +34,7 @@ Block SPhenoInput   	# SPheno specific input
  50 	0               # Majorana phases: use only positive masses
  51 	1               # Write Output in CKM basis
  52 	1               # Write spectrum in case of tachyonic states
- 55 	0               # Calculate one loop masses
+ 55 	{one_loop_masses}               # Calculate one loop masses
  57 	1               # Calculate low energy constraints
  65 	1               # Solution tadpole equation
  75 	0               # Write WHIZARD files
