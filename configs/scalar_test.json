@@ -1,9 +1,9 @@
 {
   "mass_singlet": 200,
   "mass_doublet": 300,
-  "lambda_S": 0.1,
-  "lambda_D": 0.2,
-  "lambda_P": 0.3,
+  "lambda_S":  0.1,
+  "lambda_D":  0.2,
+  "lambda_P":  0.3,
   "lambda_PP": 0.4,
-  "A": 1
+  "A": 10
 }

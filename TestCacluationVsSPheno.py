@@ -7,16 +7,16 @@ import Particle
 import Scalar
 
 if __name__ == "__main__":
-    higgs_creator = Particle.ParticleCreator(Higgs.Higgs, "configs/higgs.json")
+    higgs_creator = Particle.ParticleCreator(Higgs.Higgs, "configs/higgs_test.json")
     higgsDummy = higgs_creator.create()
 
     scalar_creator = Particle.ParticleCreator(Scalar.Scalar, "configs/scalar.json")
     scalarDummy = scalar_creator.create()
 
-    fermion_creator = Particle.ParticleCreator(Fermion.Fermion, "configs/fermion.json")
+    fermion_creator = Particle.ParticleCreator(Fermion.Fermion, "configs/fermion_test.json")
     fermionDummy = fermion_creator.create()
 
-    neutrino_creator = Particle.ParticleCreator(NeutrinoCouplings.Neutrino, "configs/neutrino_couplings.json")
+    neutrino_creator = Particle.ParticleCreator(NeutrinoCouplings.Neutrino, "configs/neutrino_couplings_test.json")
     neutrinoDummy = neutrino_creator.create()
 
     model = ModelT12ANeutrinoCouplings.ModelT12A(higgsDummy, fermionDummy, scalarDummy, neutrinoDummy)
