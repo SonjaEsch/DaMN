@@ -35,13 +35,13 @@ class ModelT12A(Model.Model):
         self.higgs_dependent.mixing_matrix = [1]
 
     def calculate_scalar_dependent(self):
-        mixing_term = self.scalar.A * self.higgs.vev / math.sqrt(2.0)
-        couplings_factor = 1 / 4.0 * self.higgs.vev ** 2
+        mixing_term = self.scalar.A * self.higgs.vev
+        couplings_factor = 1 / 2.0 * self.higgs.vev ** 2
         doublet_couplings_plus = couplings_factor*(self.scalar.lambda_D + self.scalar.lambda_P + 2*self.scalar.lambda_PP)
         doublet_couplings_minus = couplings_factor*(self.scalar.lambda_D + self.scalar.lambda_P - 2*self.scalar.lambda_PP)
 
         self.scalar_dependent.mass_matrix = [
-            [self.scalar.mass_singlet ** 2 + 1 / 4.0 * self.higgs.vev ** 2 * self.scalar.lambda_S, mixing_term, 0],
+            [self.scalar.mass_singlet ** 2 + 1 / 2.0 * self.higgs.vev ** 2 * self.scalar.lambda_S, mixing_term, 0],
             [mixing_term, self.scalar.mass_doublet ** 2 + doublet_couplings_plus, 0],
             [0, 0, self.scalar.mass_doublet ** 2 + doublet_couplings_minus]]
 
