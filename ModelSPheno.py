@@ -5,12 +5,16 @@ import NeutrinoCouplings
 import Particle
 import Scalar
 
+import subprocess
+
 
 class ModelSPheno(ModelT12ANeutrinoCouplings.ModelT12A):
     input_slha_template_path = "SPhenoInputTemplate.slha"
     input_slha_template_data = None
 
     input_slha_parameter_path = "/tmp/sphenoInput.slha"
+    spheno_executable_path = "./SPhenoT12aTest"
+    spheno_output_file_path = "/tmp/sphenoOutput.slha"
 
     def __init__(self, higgs, fermion, scalar, neutrino):
         super().__init__(higgs, fermion, scalar, neutrino)
@@ -48,8 +52,12 @@ class ModelSPheno(ModelT12ANeutrinoCouplings.ModelT12A):
         with open(self.input_slha_parameter_path, "w") as f:
             f.write(self.input_slha_template_data.format(**parameter_dict))
 
+    def run_spheno(self):
+        subprocess.call([self.spheno_executable_path, self.input_slha_parameter_path, self.spheno_output_file_path])
+
     def calculate_dependent_variables(self):
         self.write_slha_file()
+        self.run_spheno()
 
 
 if __name__ == "__main__":
