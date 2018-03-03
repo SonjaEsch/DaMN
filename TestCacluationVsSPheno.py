@@ -25,5 +25,18 @@ if __name__ == "__main__":
     modelSPheno = ModelSPheno.ModelSPheno(higgsDummy, fermionDummy, scalarDummy, neutrinoDummy, False, False)
     modelSPheno.calculate_dependent_variables()
 
+    print("Scalar")
     print(model.scalar_dependent.mass_eigenstates)
     print(modelSPheno.scalar_dependent.mass_eigenstates)
+
+    print("Fermion")
+    print(model.fermion_dependent.mass_eigenstates)
+    print(modelSPheno.fermion_dependent.mass_eigenstates)
+
+    print("Higgs")
+    print(model.higgs_dependent.mass_eigenstates)
+    print(modelSPheno.higgs_dependent.mass_eigenstates)
+
+    print("Neutrino")
+    print(model.neutrino_dependent.mass_eigenstates)
+    print(modelSPheno.neutrino_dependent.mass_eigenstates)
