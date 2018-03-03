@@ -6,6 +6,7 @@ import Particle
 import Scalar
 
 import subprocess
+import pyslha
 
 
 class ModelSPheno(ModelT12ANeutrinoCouplings.ModelT12A):
@@ -55,9 +56,47 @@ class ModelSPheno(ModelT12ANeutrinoCouplings.ModelT12A):
     def run_spheno(self):
         subprocess.call([self.spheno_executable_path, self.input_slha_parameter_path, self.spheno_output_file_path])
 
+    def read_spheno_output(self):
+        data = pyslha.read(self.spheno_output_file_path)
+        self.set_higgs_dependent_variables(data)
+        self.set_fermion_dependent_variables(data)
+        self.set_scalar_dependent_variables(data)
+        self.set_neutrino_dependent_variables(data)
+
+    def set_higgs_dependent_variables(self, data):
+        self.higgs_dependent.mass_eigenstates = [data.blocks["MASS"][25]]
+
+    def set_fermion_dependent_variables(self, data):
+        self.fermion_dependent.mass_eigenstates = [
+            data.blocks["MASS"][1000],
+            data.blocks["MASS"][1001],
+            data.blocks["MASS"][1002]
+        ]
+
+        self.fermion_dependent.mixing_matrix = [[data.blocks["ETA"][i, j] for j in range(1, 4)] for i in range(1, 4)]
+
+    def set_scalar_dependent_variables(self, data):
+        self.scalar_dependent.mass_eigenstates = [
+            data.blocks["MASS"][1005],
+            data.blocks["MASS"][10015],
+            data.blocks["MASS"][1004]
+        ]
+
+        self.scalar_dependent.mixing_matrix = [[data.blocks["ETB"][i, j] for j in range(1, 4)] for i in range(1, 4)]
+
+    def set_neutrino_dependent_variables(self, data):
+        self.neutrino_dependent.mass_eigenstates = [
+            data.blocks["MASS"][12],
+            data.blocks["MASS"][14],
+            data.blocks["MASS"][16]
+        ]
+
+        self.neutrino_dependent.mixing_matrix = [[data.blocks["UN"][i, j] for j in range(1, 4)] for i in range(1, 4)]
+
     def calculate_dependent_variables(self):
         self.write_slha_file()
         self.run_spheno()
+        self.read_spheno_output()
 
 
 if __name__ == "__main__":
