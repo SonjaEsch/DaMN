@@ -38,13 +38,13 @@ class ModelT12A(Model.Model):
         mixing_term = self.scalar.A * self.higgs.vev
 
         couplings_factor = 1 / 2.0 * self.higgs.vev ** 2
-        doublet_couplings_plus = couplings_factor*(self.scalar.lambda_D + self.scalar.lambda_P - 2*self.scalar.lambda_PP)
-        doublet_couplings_minus = couplings_factor*(self.scalar.lambda_D + self.scalar.lambda_P + 2*self.scalar.lambda_PP)
+        doublet_couplings_plus = couplings_factor*(self.scalar.lambda_D + self.scalar.lambda_P + 2*self.scalar.lambda_PP)
+        doublet_couplings_minus = couplings_factor*(self.scalar.lambda_D + self.scalar.lambda_P - 2*self.scalar.lambda_PP)
 
         self.scalar_dependent.mass_matrix = [
             [self.scalar.mass_singlet ** 2 + 1 / 2.0 * self.higgs.vev ** 2 * self.scalar.lambda_S, mixing_term, 0],
-            [mixing_term, self.scalar.mass_doublet ** 2 + doublet_couplings_plus, 0],
-            [0, 0, self.scalar.mass_doublet ** 2 + doublet_couplings_minus]]
+            [mixing_term, self.scalar.mass_doublet ** 2 + doublet_couplings_minus, 0],
+            [0, 0, self.scalar.mass_doublet ** 2 + doublet_couplings_plus]]
 
         self.scalar_dependent.calculate_eigenstates_mixing_matrix_from_mass_matrix()
 
@@ -58,9 +58,9 @@ class ModelT12A(Model.Model):
         y1_term = self.fermion.y1 * self.higgs.vev / math.sqrt(2.0)
         y2_term = self.fermion.y2 * self.higgs.vev / math.sqrt(2.0)
 
-        self.fermion_dependent.mass_matrix = [[self.fermion.mass_singlet, y1_term, y2_term],
-                                              [y1_term, 0, self.fermion.mass_doublet],
-                                              [y2_term, self.fermion.mass_doublet, 0]]
+        self.fermion_dependent.mass_matrix = [[0, self.fermion.mass_doublet, y1_term],
+                                              [self.fermion.mass_doublet, 0, y2_term],
+                                              [y1_term, y2_term, self.fermion.mass_singlet]]
 
         self.fermion_dependent.calculate_eigenstates_mixing_matrix_from_mass_matrix()
 
@@ -101,10 +101,10 @@ class ModelT12A(Model.Model):
                         mass_fermion ** 2 * math.log(float(mass_fermion ** 2)) - mass_scalar ** 2
                         * math.log((mass_scalar ** 2)))
 
-                co11 += mixing_fermion[2][j] ** 2 * mixing_scalar[0][m] ** 2 * mass_combination_jm
-                co12 += mixing_fermion[0][j] * mixing_fermion[2][j] * mixing_scalar[0][m] * mixing_scalar[1][
+                co11 += mixing_fermion[1][j] ** 2 * mixing_scalar[0][m] ** 2 * mass_combination_jm
+                co12 += mixing_fermion[2][j] * mixing_fermion[1][j] * mixing_scalar[0][m] * mixing_scalar[1][
                     m] * mass_combination_jm
-                co22 += mixing_fermion[0][j] ** 2 * (
+                co22 += mixing_fermion[2][j] ** 2 * (
                             mixing_scalar[1][m] ** 2 - mixing_scalar[2][m] ** 2) * mass_combination_jm
         return co11, co12, co22
 
@@ -140,4 +140,3 @@ if __name__ == "__main__":
     model.calculate_dependent_variables()
 
     model.pprint()
-

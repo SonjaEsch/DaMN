@@ -12,8 +12,16 @@ class DependentVariables:
     def calculate_eigenstates_mixing_matrix_from_mass_matrix(self):
         eigenvalues, eigenvectors = np.linalg.eig(np.array(self.mass_matrix))
         self.mass_eigenstates = eigenvalues.tolist()
-        self.mixing_matrix = eigenvectors.tolist()
+        # use zip to transpose
+        self.mixing_matrix = zip(*(eigenvectors.tolist()))
 
+        zipped = list(zip(self.mass_eigenstates, self.mixing_matrix))
+        zipped.sort(key=lambda x: abs(x[0]))
+
+        unzipped = list(zip(*zipped))
+        self.mass_eigenstates = list(unzipped[0])
+        # transpose back
+        self.mixing_matrix = list(zip(*list(unzipped[1])))
 
     def __str__(self):
         string = "{}\n".format(self.__class__.__name__)
@@ -33,5 +41,3 @@ class DependentVariables:
 
         print("mixing_matrix")
         pretty.pprint(self.mixing_matrix)
-
-

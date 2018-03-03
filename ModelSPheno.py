@@ -26,7 +26,7 @@ class ModelSPheno(ModelT12ANeutrinoCouplings.ModelT12A):
             calculate_branching_ratios=True,
             calculate_one_loop_masses=True
             ):
-        
+
         super().__init__(higgs, fermion, scalar, neutrino)
 
         self.calculate_branching_ratios = calculate_branching_ratios
@@ -88,7 +88,7 @@ class ModelSPheno(ModelT12ANeutrinoCouplings.ModelT12A):
             data.blocks["MASS"][1002]
         ]
 
-        self.fermion_dependent.mixing_matrix = [[data.blocks["ETA"][i, j] for j in range(1, 4)] for i in range(1, 4)]
+        self.fermion_dependent.mixing_matrix = [[data.blocks["ETA"][i, j] for i in range(1, 4)] for j in range(1, 4)]
 
     def set_scalar_dependent_variables(self, data):
         self.scalar_dependent.mass_eigenstates = [
@@ -97,7 +97,7 @@ class ModelSPheno(ModelT12ANeutrinoCouplings.ModelT12A):
             data.blocks["MASS"][1004]
         ]
 
-        self.scalar_dependent.mixing_matrix = [[data.blocks["ETB"][i, j] for j in range(1, 4)] for i in range(1, 4)]
+        self.scalar_dependent.mixing_matrix = [[data.blocks["ETB"][i, j] for i in range(1, 4)] for j in range(1, 4)]
 
     def set_neutrino_dependent_variables(self, data):
         self.neutrino_dependent.mass_eigenstates = [
@@ -106,7 +106,7 @@ class ModelSPheno(ModelT12ANeutrinoCouplings.ModelT12A):
             data.blocks["MASS"][16]
         ]
 
-        self.neutrino_dependent.mixing_matrix = [[data.blocks["UN"][i, j] for j in range(1, 4)] for i in range(1, 4)]
+        self.neutrino_dependent.mixing_matrix = [[data.blocks["UN"][i, j] for i in range(1, 4)] for j in range(1, 4)]
 
     def calculate_dependent_variables(self):
         self.write_slha_file()
