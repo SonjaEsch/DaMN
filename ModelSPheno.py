@@ -5,6 +5,7 @@ import NeutrinoCouplings
 import Particle
 import Scalar
 
+import os
 import subprocess
 import pyslha
 
@@ -69,7 +70,8 @@ class ModelSPheno(ModelT12ANeutrinoCouplings.ModelT12A):
             f.write(self.input_slha_template_data.format(**parameter_dict))
 
     def run_spheno(self):
-        subprocess.call([self.spheno_executable_path, self.input_slha_parameter_path, self.spheno_output_file_path])
+        subprocess.call([self.spheno_executable_path, self.input_slha_parameter_path, self.spheno_output_file_path],
+                        stdout=open(os.devnull, 'wb'))
 
     def read_spheno_output(self):
         data = pyslha.read(self.spheno_output_file_path)
