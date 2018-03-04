@@ -13,6 +13,8 @@ import datetime
 import json
 import os
 
+import matplotlib.pyplot as plt
+
 def higgs_mass_likelihood(mass_eigenstates):
     mu = 124.98
     sigma = 0.28
@@ -85,5 +87,18 @@ def load_scan_data():
     return models
 
 
+def plot(function1, function2):
+    models = load_scan_data()
+    x = [function1(model) for model in models]
+    y = [function2(model) for model in models]
+
+    plt.scatter(x, y)
+    plt.show()
+
+
 if __name__ == "__main__":
-    random_scan()
+    # random_scan()
+    plot(
+        lambda model: model["scalar"]["mass_doublet"],
+        lambda model: model["scalar"]["lambda_P"]
+        )
