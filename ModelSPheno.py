@@ -83,12 +83,21 @@ class ModelSPheno(ModelT12ANeutrinoCouplings.ModelT12A):
     def set_higgs_dependent_variables(self, data):
         self.higgs_dependent.mass_eigenstates = [data.blocks["MASS"][25]]
 
+        if self.higgs_dependent.mass_eigenstates[0] == 0.0:
+            raise ValueError
+
     def set_fermion_dependent_variables(self, data):
         self.fermion_dependent.mass_eigenstates = [
             data.blocks["MASS"][1000],
             data.blocks["MASS"][1001],
             data.blocks["MASS"][1002]
         ]
+
+        if (self.fermion_dependent.mass_eigenstates[0] == 0.0 or
+            self.fermion_dependent.mass_eigenstates[1] == 0.0 or
+            self.fermion_dependent.mass_eigenstates[2] == 0.0
+        ):
+            raise ValueError
 
         self.fermion_dependent.mixing_matrix = [[data.blocks["ETA"][i, j] for i in range(1, 4)] for j in range(1, 4)]
 
@@ -98,6 +107,12 @@ class ModelSPheno(ModelT12ANeutrinoCouplings.ModelT12A):
             data.blocks["MASS"][10015],
             data.blocks["MASS"][1004]
         ]
+
+        if (self.scalar_dependent.mass_eigenstates[0] == 0.0 or
+            self.scalar_dependent.mass_eigenstates[1] == 0.0 or
+            self.scalar_dependent.mass_eigenstates[2] == 0.0
+        ):
+            raise ValueError
 
         self.scalar_dependent.mixing_matrix = [[data.blocks["ETB"][i, j] for i in range(1, 4)] for j in range(1, 4)]
 
