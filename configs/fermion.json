@@ -1,6 +1,6 @@
 {
-  "mass_singlet": {"type": "uniform", "min_value": 100, "max_value": 1000},
-  "mass_doublet": {"type": "uniform", "min_value": 100, "max_value": 1000},
+  "mass_singlet": {"type": "uniform", "min_value": 100, "max_value": 5000},
+  "mass_doublet": {"type": "uniform", "min_value": 100, "max_value": 5000},
   "y1": {"type": "uniform", "min_value": -1, "max_value": 1},
   "y2": {"type": "uniform", "min_value": 0, "max_value": 1}
 }
