@@ -1,8 +1,26 @@
 {
-  "g11": {"type": "uniform", "min_value": -1, "max_value": 1},
-  "g12": {"type": "uniform", "min_value": -1, "max_value": 1},
-  "g13": {"type": "uniform", "min_value": -1, "max_value": 1},
-  "g21": {"type": "uniform", "min_value": -1, "max_value": 1},
-  "g22": {"type": "uniform", "min_value": -1, "max_value": 1},
-  "g23": {"type": "uniform", "min_value": -1, "max_value": 1}
+  "g11": {"type": "merged",
+    "distribution1": {"type": "uniform_exponential", "factor": -1, "base": 10, "min_exponent": -10, "max_exponent": 0},
+    "distribution2": {"type": "uniform_exponential", "factor": 1, "base": 10, "min_exponent": -10, "max_exponent": 0}
+  },
+  "g12": {"type": "merged",
+    "distribution1": {"type": "uniform_exponential", "factor": -1, "base": 10, "min_exponent": -10, "max_exponent": 0},
+    "distribution2": {"type": "uniform_exponential", "factor": 1, "base": 10, "min_exponent": -10, "max_exponent": 0}
+  },
+  "g13": {"type": "merged",
+    "distribution1": {"type": "uniform_exponential", "factor": -1, "base": 10, "min_exponent": -10, "max_exponent": 0},
+    "distribution2": {"type": "uniform_exponential", "factor": 1, "base": 10, "min_exponent": -10, "max_exponent": 0}
+  },
+  "g21":{"type": "merged",
+    "distribution1": {"type": "uniform_exponential", "factor": -1, "base": 10, "min_exponent": -10, "max_exponent": 0},
+    "distribution2": {"type": "uniform_exponential", "factor": 1, "base": 10, "min_exponent": -10, "max_exponent": 0}
+  },
+  "g22": {"type": "merged",
+    "distribution1": {"type": "uniform_exponential", "factor": -1, "base": 10, "min_exponent": -10, "max_exponent": 0},
+    "distribution2": {"type": "uniform_exponential", "factor": 1, "base": 10, "min_exponent": -10, "max_exponent": 0}
+  },
+  "g23": {"type": "merged",
+    "distribution1": {"type": "uniform_exponential", "factor": -1, "base": 10, "min_exponent": -10, "max_exponent": 0},
+    "distribution2": {"type": "uniform_exponential", "factor": 1, "base": 10, "min_exponent": -10, "max_exponent": 0}
+  }
 }
