@@ -15,6 +15,9 @@ import os
 
 import matplotlib.pyplot as plt
 
+from MicroMegas import MicroMegas
+
+
 def higgs_mass_likelihood(mass_eigenstates):
     mu = 124.98
     sigma = 0.28
@@ -68,6 +71,9 @@ def random_scan():
             model.calculate_dependent_variables()
         except:
             continue
+
+        micromegas = MicroMegas(model.spheno_output_file_path)
+        micromegas.calculate()
 
         if random.random() < calculate_likelihood(model):
             accepted_points.append(model)
