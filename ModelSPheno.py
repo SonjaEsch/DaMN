@@ -14,9 +14,9 @@ class ModelSPheno(ModelT12ANeutrinoCouplings.ModelT12A):
     input_slha_template_path = "SPhenoInputTemplate.slha"
     input_slha_template_data = None
 
-    input_slha_parameter_path = "/tmp/sphenoInput.slha"
+    input_slha_parameter_path = "/tmp/{}-sphenoInput.slha".format(os.getpid())
     spheno_executable_path = "./SPhenoT12aTest"
-    spheno_output_file_path = "/tmp/sphenoOutput.slha"
+    spheno_output_file_path = "/tmp/{}-sphenoOutput.slha".format(os.getpid())
 
     def __init__(
             self,

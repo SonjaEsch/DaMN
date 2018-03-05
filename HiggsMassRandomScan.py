@@ -97,8 +97,8 @@ def plot(function1, function2):
 
 
 if __name__ == "__main__":
-    # random_scan()
-    plot(
-        lambda model: model["scalar"]["mass_doublet"],
-        lambda model: model["scalar"]["lambda_P"]
-        )
+    random_scan()
+    # plot(
+    #     lambda model: model["scalar"]["mass_doublet"],
+    #     lambda model: model["scalar"]["lambda_P"]
+    # )
