@@ -15,6 +15,7 @@ import os
 
 import matplotlib.pyplot as plt
 
+
 def higgs_mass_likelihood(mass_eigenstates):
     mu = 124.98
     sigma = 0.28
@@ -87,18 +88,47 @@ def load_scan_data():
     return models
 
 
-def plot(function1, function2):
-    models = load_scan_data()
-    x = [function1(model) for model in models]
-    y = [function2(model) for model in models]
+def plot_function_vs_function(function1, function2, axis, models):
 
-    plt.scatter(x, y)
+    x = [(function1(model)) for model in models]
+    y = [(function2(model)) for model in models]
+
+    # axis.set_xscale("log")
+    # axis.set_yscale("log")
+
+    axis.hist2d(x, y, bins=20, normed=True, cmap=plt.cm.spectral)
+
+
+def plot(functions, models):
+    n = len(functions)
+    f, axarr = plt.subplots(n, n, sharex='col', sharey='row')
+    for x in range(n):
+        for y in range(n):
+            plot_function_vs_function(functions[x], functions[y], axarr[y, x], models)
+
     plt.show()
 
 
 if __name__ == "__main__":
-    random_scan()
-    # plot(
-    #     lambda model: model["scalar"]["mass_doublet"],
-    #     lambda model: model["scalar"]["lambda_P"]
-    # )
+    # random_scan()
+    models = load_scan_data()
+
+    functions = []
+    tmp_function = lambda particle, parameter: (lambda model: model[particle][parameter])
+
+    for parameter in Higgs.Higgs.parameters:
+        functions.append(tmp_function("higgs", parameter))
+
+    for parameter in Scalar.Scalar.parameters:
+        functions.append(tmp_function("scalar", parameter))
+
+    for parameter in Fermion.Fermion.parameters:
+        functions.append(tmp_function("fermion", parameter))
+
+    for parameter in NeutrinoCouplings.Neutrino.parameters:
+        functions.append(tmp_function("neutrino", parameter))
+
+    plot(
+        functions,
+        models
+    )
