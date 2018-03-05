@@ -1,6 +1,9 @@
 {
-  "mass_singlet": {"type": "uniform", "min_value": 100, "max_value": 1000},
-  "mass_doublet": {"type": "uniform", "min_value": 100, "max_value": 1000},
-  "y1": {"type": "uniform", "min_value": -1, "max_value": 1},
-  "y2": {"type": "uniform", "min_value": 0, "max_value": 1}
+  "mass_singlet": {"type": "uniform", "min_value": 100, "max_value": 5000},
+  "mass_doublet": {"type": "uniform", "min_value": 100, "max_value": 5000},
+  "y1": {"type": "merged",
+    "distribution1": {"type": "uniform_exponential", "factor": -1, "base": 10, "min_exponent": -10, "max_exponent": 0},
+    "distribution2": {"type": "uniform_exponential", "factor": 1, "base": 10, "min_exponent": -10, "max_exponent": 0}
+  },
+  "y2": {"type": "uniform_exponential", "factor": 1, "base": 10, "min_exponent": -10, "max_exponent": 0}
 }

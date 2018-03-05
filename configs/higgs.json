@@ -1,4 +1,5 @@
 {
 	"vev": 246,
 	"lambda_higgs": {"type": "uniform_exponential", "factor": 1, "base": 10, "min_exponent": -10, "max_exponent": 0}
+
 }
